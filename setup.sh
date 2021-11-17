@@ -10,20 +10,57 @@ tunefs -p /dev/ada1p2
 ssh-keygen -t ed25519 -o -a 100
 
 ## Create encrypted ZFS base directory /werzel
+zpool create bench /dev/sdc
+zfs set compression=zstd-5 zroot
+zfs set atime=off zroot
 
+zfs create                     -o exec=on  -o setuid=off zroot/tmp
+zfs create                                               zroot/home
+zfs create                                               zroot/usr
+zfs create -o compression=lz4              -o setuid=off zroot/usr/ports
+zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
+zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
+zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/usr/src
+zfs create                                               zroot/var
+zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/crash
+zfs create                     -o exec=off -o setuid=off zroot/var/db
+zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/db/pkg
+zfs create                     -o exec=off -o setuid=off zroot/var/empty
+zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/log
+zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
+zfs create                     -o exec=off -o setuid=off zroot/var/run
+zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
+
+atime=off logbias=throughput bench
+zfs create -o mountpoint=/var/lib/mysql/data -o recordsize=16k \
+           -o primarycache=metadata bench/data
+zfs create -o mountpoint=/var/lib/mysql/log bench/log
 ## Create special sub-directories
 zfs create                     -o exec=off -o setuid=off werzel/certificates
 zfs create                     -o exec=off -o setuid=off werzel/git
 zfs create                     -o exec=off -o setuid=off werzel/server_config
+# This is for all Jails
 zfs create                                               werzel/bastille
+# This is for MAIL-Accounts
+zfs create                                               werzel/mail
+# This is for DB and Backup
+zfs create -o atime=off -o recordsize=16k -o primarycache=metadata werzel/mariadb_data
+zfs create -o atime=off werzel/mariadb_log
+zfs create werzel/automysql
+# This is for NextCloud Storage
+zfs create werzel/nextcloud
+# This is for NextCloud Storage
+zfs create werzel/mejep
+# This is for NextCloud Storage
+zfs create werzel/nextcloud
 
 ## Clone GIT
-mkdir -p /werzel/server_config
+#mkdir -p /werzel/server_config
 cd /werzel/server_config && git clone https://github.com/SamGamdschie/server_config
 mkdir -p /root/werzel_tools
 cd /werzel/mail_config && git clone https://github.com/SamGamdschie/werzel_tools
-mkdir -p /werzel/mejep
-cd /werzel/mail_config && git clone https://github.com/SamGamdschie/mejep
+#mkdir -p /werzel/mejep
+cd /werzel/mejep && git clone https://github.com/SamGamdschie/mejep
 
 ## Load Configuration
 
