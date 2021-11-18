@@ -3,6 +3,31 @@
 # Install base software on host
 pkg install -y git bastille vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
 
+### SSH absichern
+```sh
+echo '## NEW SECURE SECURE SHELL\
+Protocol 2\
+Port 2345\
+ListenAddress 78.46.50.18\
+\
+HostKey /etc/ssh/ssh_host_ed25519_key\
+HostKey /etc/ssh/ssh_host_rsa_key\
+\
+KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256\
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\
+\
+# Root login is not allowed for auditing reasons.\
+PermitRootLogin no\
+AllowGroups wheel\
+#AuthenticationMethods publickey\
+\
+# LogLevel VERBOSE logs users key fingerprint on login. Needed to have a clear audit track of which key was using to log in.\
+LogLevel VERBOSE\
+\
+Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\' >> /etc/ssh/sshd_config
+```
+
 ## Check FS parameters
 tunefs -p /dev/ada1p2
 

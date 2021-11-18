@@ -1,18 +1,6 @@
 # Werzelserver
-## Vorinstallation Löschen
-```sh  
-kldload zfs
-kldload aesni
-gmirror load
-sysctl kern.geom.label.gptid.enable=0
-zpool import -o readonly=on -fR /mnt zroot
-zpool destroy zroot
-
-gpart destroy -F nvd0
-gpart destroy -F nvd1
-```
 ## Grundinstallation
-Rescue-System 11.2
+Rescue-System 13
 12.0 > 64bit > mail.werzelserver.de > UFS mit 40 GB auf nvd0
 ```sh
 bsdinstallimage
@@ -51,6 +39,20 @@ pwd_mkdb -p /etc/master.passwd
 
 
 ```
+
+## Vorinstallation Löschen
+```sh  
+kldload zfs
+kldload aesni
+gmirror load
+sysctl kern.geom.label.gptid.enable=0
+zpool import -o readonly=on -fR /mnt zroot
+zpool destroy zroot
+
+gpart destroy -F nvd0
+gpart destroy -F nvd1
+```
+
 
 After you compiled and installed a new version of FreeBSD, use etcupdate(8) to merge
 configuration updates.
