@@ -230,6 +230,89 @@ zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
 zfs create                     -o exec=off -o setuid=off zroot/var/run
 zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 ```
+### ZFS ENryption
+```
+zfs create -o encryption=[algorithm] -o keylocation=[location] -o keyformat=[format] poolname/datasetname
+
+zfs create -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
+```
+
+
+
+root@banshee:~# zfs create -o encryption=on -o keylocation=prompt -o keyformat=passphrase banshee/encrypted
+Enter passphrase: 
+Re-enter passphrase: 
+
+root@banshee:~# zfs create banshee/encrypted/child1
+root@banshee:~# zfs create banshee/encrypted/child2
+root@banshee:~# zfs create banshee/encrypted/child3
+
+root@banshee:~# zfs list -r banshee/encrypted
+NAME                       USED  AVAIL     REFER  MOUNTPOINT
+banshee/encrypted         1.58M   848G      432K  /banshee/encrypted
+banshee/encrypted/child1   320K   848G      320K  /banshee/encrypted/child1
+banshee/encrypted/child2   320K   848G      320K  /banshee/encrypted/child2
+banshee/encrypted/child3   320K   848G      320K  /banshee/encrypted/child3
+
+root@banshee:~# zfs get encryption banshee/encrypted/child1
+NAME                      PROPERTY    VALUE        SOURCE
+banshee/encrypted/child1  encryption  aes-256-gcm  -
+
+root@banshee:~# wget -qO /banshee/encrypted/child2/HuckFinn.txt http://textfiles.com/etext/AUTHORS/TWAIN/huck_finn
+
+root@banshee:~# zfs unmount banshee/encrypted
+root@banshee:~# zfs unload-key -r banshee/encrypted
+1 / 1 key(s) successfully unloaded
+
+root@banshee:~# zfs mount banshee/encrypted
+cannot mount 'banshee/encrypted': encryption key not loaded
+
+root@banshee:~# ls /banshee/encrypted/child2
+ls: cannot access '/banshee/encrypted/child2': No such file or directory
+
+root@banshee:~# zfs list -r banshee/encrypted
+NAME                       USED  AVAIL     REFER  MOUNTPOINT
+banshee/encrypted         2.19M   848G      432K  /banshee/encrypted
+banshee/encrypted/child1   320K   848G      320K  /banshee/encrypted/child1
+banshee/encrypted/child2   944K   848G      720K  /banshee/encrypted/child2
+banshee/encrypted/child3   320K   848G      320K  /banshee/encrypted/child3
+
+root@banshee:~# wget -qO /banshee/encrypted/child2/HuckFinn.txt http://textfiles.com/etext/AUTHORS/TWAIN/huck_finn
+
+root@banshee:~# zfs unmount banshee/encrypted
+root@banshee:~# zfs unload-key -r banshee/encrypted
+1 / 1 key(s) successfully unloaded
+
+root@banshee:~# zfs mount banshee/encrypted
+cannot mount 'banshee/encrypted': encryption key not loaded
+
+root@banshee:~# ls /banshee/encrypted/child2
+ls: cannot access '/banshee/encrypted/child2': No such file or directory
+
+root@banshee:~# zfs list -r banshee/encrypted
+NAME                       USED  AVAIL     REFER  MOUNTPOINT
+banshee/encrypted         2.19M   848G      432K  /banshee/encrypted
+banshee/encrypted/child1   320K   848G      320K  /banshee/encrypted/child1
+banshee/encrypted/child2   944K   848G      720K  /banshee/encrypted/child2
+banshee/encrypted/child3   320K   848G      320K  /banshee/encrypted/child3
+
+root@banshee:~# zfs load-key -r banshee/encrypted
+Enter passphrase for 'banshee/encrypted': 
+1 / 1 key(s) successfully loaded
+root@banshee:~# zfs mount | grep encr
+root@banshee:~# ls /banshee/encrypted
+root@banshee:~# ls /banshee/encrypted/child2
+ls: cannot access '/banshee/encrypted/child2': No such file or directory
+
+root@banshee:~# zfs load-key -r banshee/encrypted
+Enter passphrase for 'banshee/encrypted': 
+1 / 1 key(s) successfully loaded
+root@banshee:~# zfs mount | grep encr
+root@banshee:~# ls /banshee/encrypted
+root@banshee:~# ls /banshee/encrypted/child2
+ls: cannot access '/banshee/encrypted/child2': No such file or directory
+
+
 
 ### ZFS - Rescue
 ```sh  

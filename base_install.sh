@@ -3,38 +3,13 @@
 # Install base software on host
 pkg install -y git bastille vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
 
-### SSH absichern
-```sh
-echo '## NEW SECURE SECURE SHELL\
-Protocol 2\
-Port 2345\
-ListenAddress 78.46.50.18\
-\
-HostKey /etc/ssh/ssh_host_ed25519_key\
-HostKey /etc/ssh/ssh_host_rsa_key\
-\
-KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256\
-Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\
-\
-# Root login is not allowed for auditing reasons.\
-PermitRootLogin no\
-AllowGroups wheel\
-#AuthenticationMethods publickey\
-\
-# LogLevel VERBOSE logs users key fingerprint on login. Needed to have a clear audit track of which key was using to log in.\
-LogLevel VERBOSE\
-\
-Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\' >> /etc/ssh/sshd_config
-```
-
 ## Check FS parameters
 tunefs -p /dev/ada1p2
 
 ## Erstelle eigenen SSH-Key =>
 ssh-keygen -t ed25519 -o -a 100
 
-## Create encrypted ZFS base directory /werzel
+## Create ZFS base directory (root)
 zpool create bench /dev/sdc
 zfs set compression=zstd-5 zroot
 zfs set atime=off zroot
@@ -56,10 +31,12 @@ zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
 zfs create                     -o exec=off -o setuid=off zroot/var/run
 zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 
-atime=off logbias=throughput bench
-zfs create -o mountpoint=/var/lib/mysql/data -o recordsize=16k \
-           -o primarycache=metadata bench/data
-zfs create -o mountpoint=/var/lib/mysql/log bench/log
+## Create encrypted ZFS base directory /werzel
+zfs create -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
+
+#zfs create -o mountpoint=/var/lib/mysql/data -o recordsize=16k \
+#           -o primarycache=metadata bench/data
+#zfs create -o mountpoint=/var/lib/mysql/log bench/log
 ## Create special sub-directories
 zfs create                     -o exec=off -o setuid=off werzel/certificates
 zfs create                     -o exec=off -o setuid=off werzel/git
@@ -81,87 +58,39 @@ zfs create werzel/nextcloud
 
 ## Clone GIT
 #mkdir -p /werzel/server_config
-cd /werzel/server_config && git clone https://github.com/SamGamdschie/server_config
+cd /werzel/server_config && git clone git@github.com:SamGamdschie/server_config.git
 mkdir -p /root/werzel_tools
-cd /werzel/mail_config && git clone https://github.com/SamGamdschie/werzel_tools
+cd /werzel/mail_config && git clone git@github.com:SamGamdschie/werzel_tools.git
 #mkdir -p /werzel/mejep
-cd /werzel/mejep && git clone https://github.com/SamGamdschie/mejep
+cd /werzel/mejep && git clone git@github.com:SamGamdschie/mejep.git
 
-## Load Configuration
+## Load Firewall Configuration
+cp -a /werzel/server_config/pf/pf.conf /etc/pf.conf
 
+### SSH Configuration
+mv /etc/ssh/sshd_config /etc/ssh/sshd_config.old
+cp /werzel/server_config/ssh/sshd_config /etc/ssh/sshd_config
 
-# Restart Firewall
+# Restart Firewall & SSH
 service pf restart
+service sshd restart
 
-# Install Bastille
-make -C /usr/ports/sysutils/bastille install clean
+## Boot Loader Configuration
+mv /boot/loader.conf /boot/loader.conf.old
+cp /werzel/server_config/boot/loader.conf /boot/loader.conf
 
-# Activate Networking
-sysrc cloned_interfaces+=lo1
-sysrc ifconfig_lo1_name="bastille0"
-service netif cloneup
+### RC Configuration
+mv /etc/rc.conf /etc/rc.conf.old
+cp /werzel/server_config/rc/rc.conf /etc/rc.conf
 
-#Use ZFS
-sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_enable=YES
-sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_zpool=zroot
-sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_prefix="werzel/bastille"
+### DNS Resolver
+cp /werzel/server_config/resolv.conf /etc/resolv.conf
 
-# Create jails from templates
-## first bootstrap everything
-bastille bootstrap 13.0-RELEASE update
-bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
-bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
-bastille bootstrap https://github.com/SamGamdschie/bastille-mail
-bastille bootstrap https://github.com/SamGamdschie/bastille-proxy
-bastille bootstrap https://github.com/SamGamdschie/bastille-postfixadmin
-bastille bootstrap https://github.com/SamGamdschie/bastille-phpmyadmin
-bastille bootstrap https://github.com/SamGamdschie/bastille-php
-bastille bootstrap https://github.com/SamGamdschie/bastille-nextcloud
-bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
-bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
+### Sysctl
+cp /werzel/server_config/sysctl.conf /etc/sysctl.conf
 
-## now create jails
-bastille create db 13.0-RELEASE 10.0.0.1
-bastille template db SamGamdschie/bastille-mariadb
+### Make Conf
+cp /werzel/server_config/make.conf /etc/make.conf
 
-bastille create letsencrypt 13.0-RELEASE 10.0.0.2
-bastille template letsencrypt SamGamdschie/bastille-letsencrypt
-
-bastille create mail 13.0-RELEASE 10.0.0.3
-bastille template mail SamGamdschie/bastille-mail
-
-bastille create proxy 13.0-RELEASE 10.0.0.4
-bastille template proxy SamGamdschie/bastille-proxy
-
-bastille create postfixadmin 13.0-RELEASE 10.0.0.10
-bastille template postfixadmin SamGamdschie/bastille-postfixadmin
-
-bastille create phpmyadmin 13.0-RELEASE 10.0.0.11
-bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
-
-bastille create matomo 13.0-RELEASE 10.0.0.12
-bastille template matomo SamGamdschie/bastille-php
-
-bastille create cloud 13.0-RELEASE 10.0.0.20
-bastille template cloud SamGamdschie/bastille-nextcloud
-
-bastille create heimen 13.0-RELEASE 10.0.0.21
-bastille template heimen SamGamdschie/bastille-wordpress
-
-bastille create hobbingen 13.0-RELEASE 10.0.0.22
-bastille template hobbingen SamGamdschie/bastille-wordpress
-
-bastille create seeadler 13.0-RELEASE 10.0.0.23
-bastille template seeadler SamGamdschie/bastille-wordpress
-
-bastille create mejep 13.0-RELEASE 10.0.0.24
-bastille template mejep SamGamdschie/bastille-php
-
-bastille create werzel 13.0-RELEASE 10.0.0.25
-bastille template werzel SamGamdschie/bastille-php
-
-bastille create thorsten 13.0-RELEASE 10.0.0.26
-bastille template thorsten SamGamdschie/bastille-php
-
-bastille cp ALL /werzerl/server_config/hosts.bastille etc/hosts
-
+### Profile
+cp /werzel/server_config/profile /etc/profile
