@@ -1,35 +1,39 @@
 #!/bin/sh
 
-# Install base software on host
-pkg install -y git bastille vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
-
 ## Check FS parameters
 tunefs -p /dev/ada1p2
 
 ## Erstelle eigenen SSH-Key =>
 ssh-keygen -t ed25519 -o -a 100
 
+## Base Software
+/usr/sbin/pkg install -y ca_root_nss
+/usr/sbin/pkg install -y subversion
+/usr/sbin/pkg install -y portmaster
+/usr/sbin/pkg install -y mosh
+/usr/sbin/pkg install -y zsh
+/usr/sbin/pkg install -y openssh
+
 ## Create ZFS base directory (root)
-zpool create bench /dev/sdc
 zfs set compression=zstd-5 zroot
 zfs set atime=off zroot
 
-zfs create                     -o exec=on  -o setuid=off zroot/tmp
-zfs create                                               zroot/home
-zfs create                                               zroot/usr
-zfs create -o compression=lz4              -o setuid=off zroot/usr/ports
-zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
-zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
-zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/usr/src
-zfs create                                               zroot/var
-zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/crash
-zfs create                     -o exec=off -o setuid=off zroot/var/db
-zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/db/pkg
-zfs create                     -o exec=off -o setuid=off zroot/var/empty
-zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/log
-zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
-zfs create                     -o exec=off -o setuid=off zroot/var/run
-zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
+#zfs create                     -o exec=on  -o setuid=off zroot/tmp
+#zfs create                                               zroot/home
+#zfs create                                               zroot/usr
+#zfs create -o compression=lz4              -o setuid=off zroot/usr/ports
+#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
+#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
+#zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/usr/src
+#zfs create                                               zroot/var
+#zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/crash
+#zfs create                     -o exec=off -o setuid=off zroot/var/db
+#zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/db/pkg
+#zfs create                     -o exec=off -o setuid=off zroot/var/empty
+#zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/log
+#zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
+#zfs create                     -o exec=off -o setuid=off zroot/var/run
+#zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 
 ## Create encrypted ZFS base directory /werzel
 zfs create -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
@@ -56,13 +60,25 @@ zfs create werzel/mejep
 # This is for NextCloud Storage
 zfs create werzel/nextcloud
 
+## Software Packages
+portsnap fetch
+portsnap extract
+portsnap fetch update
+
+rm -rf /usr/src/* /usr/src/.*
+svn checkout https://svn.freebsd.org/base/releng/12.1/ /usr/src
+svn update /usr/src
+
+# Install base software on host
+pkg install -y git vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
+
 ## Clone GIT
 #mkdir -p /werzel/server_config
-cd /werzel/server_config && git clone git@github.com:SamGamdschie/server_config.git
-mkdir -p /root/werzel_tools
-cd /werzel/mail_config && git clone git@github.com:SamGamdschie/werzel_tools.git
+cd /werzel && git clone git@github.com:SamGamdschie/server_config.git
+#mkdir -p /root/werzel_tools
+cd /root && git clone git@github.com:SamGamdschie/werzel_tools.git
 #mkdir -p /werzel/mejep
-cd /werzel/mejep && git clone git@github.com:SamGamdschie/mejep.git
+cd /werzel && git clone git@github.com:SamGamdschie/mejep.git
 
 ## Load Firewall Configuration
 cp -a /werzel/server_config/pf/pf.conf /etc/pf.conf
