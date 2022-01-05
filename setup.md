@@ -1,4 +1,55 @@
-# Werzelserver
+# Base System
+## FreeBSD installation
+Start the server in Rescue system using FreeBSD as target.
+## Base Installation
+Log on to the system via SSH and start installation
+```sh
+bsdinstallimage
+```
+Take *ZFS* as partion scheme at best using `mirror` or `RAID-Z*` for safer data on the server.
+
+## First Updates and Tweaks
+### Check FS parameters
+tunefs -p /dev/ada1p2
+### ZFS
+```sh
+zfs set compression=zstd-5 zroot
+zfs set atime=off zroot
+zfs create                     -o exec=off -o setuid=off werzel/git
+```
+### secure SSH
+```sh
+echo '## NEW SECURE SECURE SHELL\
+Protocol 2\
+Port 2345\
+ListenAddress 78.46.50.18\
+\
+HostKey /etc/ssh/ssh_host_ed25519_key\
+HostKey /etc/ssh/ssh_host_rsa_key\
+\
+KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256\
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\
+\
+# Root login is not allowed for auditing reasons.\
+PermitRootLogin no\
+AllowGroups wheel\
+#AuthenticationMethods publickey\
+\
+# LogLevel VERBOSE logs users key fingerprint on login. Needed to have a clear audit track of which key was using to log in.\
+LogLevel VERBOSE\
+\
+Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\' >> /etc/ssh/sshd_config
+```
+
+## Create SSH Key (use password!)
+```sh
+ssh-keygen -t ed25519
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+### Load first
 ## Grundinstallation
 Rescue-System 13
 12.0 > 64bit > mail.werzelserver.de > UFS mit 40 GB auf nvd0

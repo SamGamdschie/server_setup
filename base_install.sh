@@ -18,21 +18,24 @@ ssh-keygen -t ed25519 -o -a 100
 zfs set compression=zstd-5 zroot
 zfs set atime=off zroot
 
+zfs set exec=off zroot/usr/src
+zfs set exec=off zroot/var/mail
+
 #zfs create                     -o exec=on  -o setuid=off zroot/tmp
-#zfs create                                               zroot/home
 #zfs create                                               zroot/usr
-#zfs create -o compression=lz4              -o setuid=off zroot/usr/ports
-#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
-#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
-#zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/usr/src
+#zfs create                                               zroot/usr/home
+#zfs create -o compression=zstd-5              -o setuid=off zroot/usr/ports
+zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
+zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
+#zfs create -o compression=zstd-5  -o exec=off -o setuid=off zroot/usr/src
 #zfs create                                               zroot/var
 #zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/crash
-#zfs create                     -o exec=off -o setuid=off zroot/var/db
-#zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/db/pkg
-#zfs create                     -o exec=off -o setuid=off zroot/var/empty
+zfs create                     -o exec=off -o setuid=off zroot/var/db
+zfs create -o compression=zstd-5  -o exec=on  -o setuid=off zroot/var/db/pkg
+zfs create                     -o exec=off -o setuid=off zroot/var/empty
 #zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/log
 #zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
-#zfs create                     -o exec=off -o setuid=off zroot/var/run
+zfs create                     -o exec=off -o setuid=off zroot/var/run
 #zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 
 ## Create encrypted ZFS base directory /werzel
@@ -51,10 +54,12 @@ zfs create                                               werzel/bastille
 zfs create                                               werzel/mail
 # This is for DB and Backup
 zfs create -o atime=off -o recordsize=16k -o primarycache=metadata werzel/mariadb_data
-zfs create -o atime=off werzel/mariadb_log
-zfs create werzel/automysql
+zfs create -o atime=off -o exec=off werzel/mariadb_log
+zfs create -o exec=off werzel/automysql
 # This is for NextCloud Storage
 zfs create werzel/nextcloud
+
+
 # This is for NextCloud Storage
 zfs create werzel/mejep
 # This is for NextCloud Storage
