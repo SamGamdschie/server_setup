@@ -1,23 +1,6 @@
 #!/bin/sh
 
-## Check FS parameters
-tunefs -p /dev/ada1p2
-
-## Erstelle eigenen SSH-Key =>
-ssh-keygen -t ed25519 -o -a 100
-
-## Base Software
-/usr/sbin/pkg install -y ca_root_nss
-/usr/sbin/pkg install -y subversion
-/usr/sbin/pkg install -y portmaster
-/usr/sbin/pkg install -y mosh
-/usr/sbin/pkg install -y zsh
-/usr/sbin/pkg install -y openssh
-
 ## Create ZFS base directory (root)
-zfs set compression=zstd-5 zroot
-zfs set atime=off zroot
-
 zfs set exec=off zroot/usr/src
 zfs set exec=off zroot/var/mail
 
@@ -46,7 +29,6 @@ zfs create -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphra
 #zfs create -o mountpoint=/var/lib/mysql/log bench/log
 ## Create special sub-directories
 zfs create                     -o exec=off -o setuid=off werzel/certificates
-zfs create                     -o exec=off -o setuid=off werzel/git
 zfs create                     -o exec=off -o setuid=off werzel/server_config
 # This is for all Jails
 zfs create                                               werzel/bastille
@@ -55,7 +37,7 @@ zfs create                                               werzel/mail
 # This is for DB and Backup
 zfs create -o atime=off -o recordsize=16k -o primarycache=metadata werzel/mariadb_data
 zfs create -o atime=off -o exec=off werzel/mariadb_log
-zfs create -o exec=off werzel/automysql
+zfs create -o atime=off -o exec=off werzel/mariadb_backup
 # This is for NextCloud Storage
 zfs create werzel/nextcloud
 
@@ -65,17 +47,17 @@ zfs create werzel/mejep
 # This is for NextCloud Storage
 zfs create werzel/nextcloud
 
+# Install base software on host
+/usr/sbin/pkg  nstall -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
+
 ## Software Packages
-portsnap fetch
-portsnap extract
-portsnap fetch update
+/usr/sbin/portsnap fetch
+/usr/sbin/portsnap extract
+/usr/sbin/portsnap fetch update
 
 rm -rf /usr/src/* /usr/src/.*
-svn checkout https://svn.freebsd.org/base/releng/12.1/ /usr/src
+svn checkout https://svn.freebsd.org/base/releng/13.0/ /usr/src
 svn update /usr/src
-
-# Install base software on host
-pkg install -y git vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
 
 ## Clone GIT
 #mkdir -p /werzel/server_config

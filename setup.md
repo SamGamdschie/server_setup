@@ -7,7 +7,7 @@ Log on to the system via SSH and start installation
 bsdinstallimage
 ```
 Take *ZFS* as partion scheme at best using `mirror` or `RAID-Z*` for safer data on the server.
-
+Do not forget to add your user to group `wheel`. This is necessary to access the server using SSH.
 ## First Updates and Tweaks
 ### Check FS parameters
 tunefs -p /dev/ada1p2
@@ -15,14 +15,14 @@ tunefs -p /dev/ada1p2
 ```sh
 zfs set compression=zstd-5 zroot
 zfs set atime=off zroot
-zfs create                     -o exec=off -o setuid=off werzel/git
 ```
-### secure SSH
+### secure SSH (use port 2345 and group wheel)
 ```sh
-echo '## NEW SECURE SECURE SHELL\
+set IP=`ifconfig | grep inet | grep -v 127 | grep -v inet6 | cut -w -f3`
+echo "### NEW SECURE SECURE SHELL ###\
 Protocol 2\
 Port 2345\
-ListenAddress 78.46.50.18\
+ListenAddress $IP\
 \
 HostKey /etc/ssh/ssh_host_ed25519_key\
 HostKey /etc/ssh/ssh_host_rsa_key\
@@ -39,17 +39,36 @@ AllowGroups wheel\
 # LogLevel VERBOSE logs users key fingerprint on login. Needed to have a clear audit track of which key was using to log in.\
 LogLevel VERBOSE\
 \
-Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\' >> /etc/ssh/sshd_config
+Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\ " >> /etc/ssh/sshd_config
 ```
 
-## Create SSH Key (use password!)
+## Create SSH Key (use password! and ed25519)
 ```sh
 ssh-keygen -t ed25519
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
+service sshd restart
+```
+Check that SSH is accessible after restart using new terminal.
+Then add your public key to the user you want to connect with:
+```sh
+cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 ```
 
-### Load first
+### Load this GIT repo to start automatic process
+```sh
+/usr/sbin/pkg install -y git
+cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
+```
+
+### Update Base System and Restart
+```sh
+/usr/sbin/freebsd-update fetch
+/usr/sbin/freebsd-update update
+/sbin/shutdown -r now
+```
+
+
 ## Grundinstallation
 Rescue-System 13
 12.0 > 64bit > mail.werzelserver.de > UFS mit 40 GB auf nvd0
