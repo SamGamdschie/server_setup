@@ -22,33 +22,40 @@ zfs create                     -o exec=off -o setuid=off zroot/var/run
 #zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 
 ## Create encrypted ZFS base directory /werzel
-zfs create -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
-
+zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
 #zfs create -o mountpoint=/var/lib/mysql/data -o recordsize=16k \
 #           -o primarycache=metadata bench/data
 #zfs create -o mountpoint=/var/lib/mysql/log bench/log
 ## Create special sub-directories
-zfs create                     -o exec=off -o setuid=off werzel/certificates
-zfs create                     -o exec=off -o setuid=off werzel/server_config
+zfs create                     -o exec=off -o setuid=off zroot/werzel/certificates
+zfs create                     -o exec=off -o setuid=off zroot/werzel/server_config
 # This is for all Jails
-zfs create                                               werzel/bastille
+zfs create                                               zroot/werzel/bastille
 # This is for MAIL-Accounts
-zfs create                                               werzel/mail
+zfs create                                               zroot/werzel/mail
 # This is for DB and Backup
-zfs create -o atime=off -o recordsize=16k -o primarycache=metadata werzel/mariadb_data
-zfs create -o atime=off -o exec=off werzel/mariadb_log
-zfs create -o atime=off -o exec=off werzel/mariadb_backup
+zfs create -o atime=off -o recordsize=16k -o primarycache=metadata zroot/werzel/mariadb_data
+zfs create -o atime=off -o exec=off zroot/werzel/mariadb_log
+zfs create -o atime=off -o exec=off zroot/werzel/mariadb_backup
 # This is for NextCloud Storage
-zfs create werzel/nextcloud
+zfs create zroot/werzel/nextcloud
+# This is for Middle-earth Jeopardy
+zfs create zroot/werzel/mejep
+# This is for Werzelheimen Storage
+zfs create zroot/werzel/werzelheimen
+# This is for WHobbingen Storage
+zfs create zroot/werzel/hobbingen
+# This is for Seeadler Storage
+zfs create zroot/werzel/seeadler
 
-
-# This is for NextCloud Storage
-zfs create werzel/mejep
-# This is for NextCloud Storage
-zfs create werzel/nextcloud
+#Check Encryption Status
+zfs get encryption /werzel/server_config
+zfs get encryption /werzel/bastille
+zfs get encryption /werzel/mail
+zfs get encryption /werzel/mariadb
 
 # Install base software on host
-/usr/sbin/pkg  nstall -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssh openssl rsync
+/usr/sbin/pkg install -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssl rsync
 
 ## Software Packages
 /usr/sbin/portsnap fetch
