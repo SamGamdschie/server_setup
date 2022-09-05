@@ -9,8 +9,14 @@ bsdinstallimage
 Take *ZFS* as partion scheme at best using `mirror` or `RAID-Z*` for safer data on the server.
 Do not forget to add your user to group `wheel`. This is necessary to access the server using SSH.
 ## First Updates and Tweaks
+Start everything as root
+```sh
+su
+```
 ### Check FS parameters
+```sh
 tunefs -p /dev/ada1p2
+```
 ### ZFS
 ```sh
 zfs set compression=zstd-5 zroot
@@ -42,11 +48,18 @@ LogLevel VERBOSE\
 Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\ " >> /etc/ssh/sshd_config
 ```
 
-## Create SSH Key (use password! and ed25519)
+## Create SSH Key 
+Always use password! and ed25519 format
 ```sh
+ssh-keygen -t ed25519
+```
+Create one keypair for root (su) for later use with GitHub, then logout and do the same for current user, add password to agent and restart service as root.
+```sh
+exit
 ssh-keygen -t ed25519
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
+su
 service sshd restart
 ```
 Check that SSH is accessible after restart using new terminal.
