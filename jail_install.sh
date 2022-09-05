@@ -16,7 +16,7 @@ sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_prefix="werzel/basti
 
 # Create jails from templates
 ## first bootstrap everything
-bastille bootstrap 13.0-RELEASE update
+bastille bootstrap 13.1-RELEASE update
 bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
 bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
 bastille bootstrap https://github.com/SamGamdschie/bastille-mail
