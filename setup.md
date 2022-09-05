@@ -77,6 +77,7 @@ Ensure that PublicKey is available at GitHub to access repositories
 ```
 
 ### Load this GIT repo to start automatic process
+Please note: the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 ```sh
 /usr/sbin/pkg install -y git
 cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
@@ -89,6 +90,7 @@ In case everything ran smoothly, start installation of jails
 ```sh
 ~/server_setup/jail_install.sh
 ```
+Reboot your server and do any needed post installation task.
 
 # Tips'n'tricks
 ## ZFS Encryption
