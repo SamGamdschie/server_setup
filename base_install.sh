@@ -1,5 +1,13 @@
 #!/bin/sh
 
+### Move old files to backup dir
+mkdir -p /var/zfs_back/db
+mkdir -p /var/zfs_back/empty
+mkdir -p /var/zfs_back/run
+mv /var/db /var/zfs_back/
+mv /var/empty /var/zfs_back
+mv /var/run /var/zfs_back/
+
 ## Create ZFS base directory (root)
 zfs set exec=off zroot/usr/src
 zfs set exec=off zroot/var/mail
@@ -54,27 +62,36 @@ zfs get encryption /werzel/bastille
 zfs get encryption /werzel/mail
 zfs get encryption /werzel/mariadb
 
+## Move backed data back
+mv /var/zfs_back/db/* /var/db/
+mv /var/zfs_back/empty/* /var/empty/
+mv /var/zfs_back/run/* /var/run/
+
 # Install base software on host
 /usr/sbin/pkg install -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssl rsync
 
 ## Software Packages
+mkdir -p /var/db/portsnap
+
 /usr/sbin/portsnap fetch
 /usr/sbin/portsnap extract
 /usr/sbin/portsnap fetch update
 
+## FreeBSD SRC which is neede for Jails!
 rm -rf /usr/src/* /usr/src/.*
-svn checkout https://svn.freebsd.org/base/releng/13.0/ /usr/src
-svn update /usr/src
+git clone -o freebsd -b releng/13.1 https://git.FreeBSD.org/src.git /usr/src
 
 ## Clone GIT
 #mkdir -p /werzel/server_config
-cd /werzel && git clone git@github.com:SamGamdschie/server_config.git
+gh auth login
+cd /werzel && gh repo clone SamGamdschie/server_config
 #mkdir -p /root/werzel_tools
-cd /root && git clone git@github.com:SamGamdschie/werzel_tools.git
+cd /root && gh repo clone SamGamdschie/werzel_tools
 #mkdir -p /werzel/mejep
-cd /werzel && git clone git@github.com:SamGamdschie/mejep.git
+cd /werzel && gh repo clone git@github.com:SamGamdschie/mejep
 
 ## Load Firewall Configuration
+mv /etc/pf.conf /etc/pf.conf.old
 cp -a /werzel/server_config/pf/pf.conf /etc/pf.conf
 
 ### SSH Configuration

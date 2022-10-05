@@ -1,8 +1,13 @@
 # Base System
 ## FreeBSD installation
-Start the server in Rescue system using FreeBSD as target.
+Start the server in Rescue system using any Linux as target.
+Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this:
+```sh
+wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.1-RELEASE-amd64.img
+dd if=mfsbsd-13.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1m
+```
 ## Base Installation
-Log on to the system via SSH and start installation
+Log on to the system via SSH with the password “mfsroot” and start installation
 ```sh
 bsdinstallimage
 ```
@@ -12,10 +17,6 @@ Do not forget to add your user to group `wheel`. This is necessary to access the
 Start everything as root
 ```sh
 su
-```
-### Check FS parameters
-```sh
-tunefs -p /dev/ada1p2
 ```
 ### ZFS
 ```sh
@@ -79,7 +80,8 @@ Ensure that PublicKey is available at GitHub to access repositories
 ### Load this GIT repo to start automatic process
 Please note: the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 ```sh
-/usr/sbin/pkg install -y git
+/usr/sbin/pkg install -y git gh
+gh auth login
 cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
 chmod a+x ~/server_setup/base_install.sh
 chmod a+x ~/server_setup/jail_install.sh
