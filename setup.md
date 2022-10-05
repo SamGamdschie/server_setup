@@ -88,7 +88,12 @@ chmod a+x ~/server_setup/jail_install.sh
 ~/server_setup/base_install.sh
 ```
 Check output of base install for any quirk result.
-In case everything ran smoothly, start installation of jails
+In case everything ran smoothly, restart SSH-daemon and firewall
+```sh
+service sshd restart
+service pf restart
+```
+If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
 ~/server_setup/jail_install.sh
 ```

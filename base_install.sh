@@ -88,19 +88,15 @@ cd /werzel && gh repo clone SamGamdschie/server_config
 #mkdir -p /root/werzel_tools
 cd /root && gh repo clone SamGamdschie/werzel_tools
 #mkdir -p /werzel/mejep
-cd /werzel && gh repo clone git@github.com:SamGamdschie/mejep
+cd /werzel && gh repo clone SamGamdschie/mejep
 
 ## Load Firewall Configuration
-mv /etc/pf.conf /etc/pf.conf.old
+#mv /etc/pf.conf /etc/pf.conf.old
 cp -a /werzel/server_config/pf/pf.conf /etc/pf.conf
 
 ### SSH Configuration
 mv /etc/ssh/sshd_config /etc/ssh/sshd_config.old
 cp /werzel/server_config/ssh/sshd_config /etc/ssh/sshd_config
-
-# Restart Firewall & SSH
-service pf restart
-service sshd restart
 
 ## Boot Loader Configuration
 mv /boot/loader.conf /boot/loader.conf.old
