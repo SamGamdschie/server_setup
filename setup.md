@@ -1,18 +1,22 @@
 # Base System
 ## FreeBSD installation
 Start the server in Rescue system using any Linux as target.
-Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this:
+Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
 wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.1-RELEASE-amd64.img
-dd if=mfsbsd-13.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1m
+dd if=mfsbsd-13.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 ```
 ## Base Installation
 Log on to the system via SSH with the password “mfsroot” and start installation
 ```sh
-bsdinstallimage
+bsdinstall
 ```
 Take *ZFS* as partion scheme at best using `mirror` or `RAID-Z*` for safer data on the server.
 Do not forget to add your user to group `wheel`. This is necessary to access the server using SSH.
+If unsure check that Bootcode is available on the disks.
+```sh
+gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 /dev/nvd
+```
 ## First Updates and Tweaks
 Start everything as root
 ```sh
@@ -30,9 +34,6 @@ echo "### NEW SECURE SECURE SHELL ###\
 Protocol 2\
 Port 2345\
 ListenAddress $IP\
-\
-HostKey /etc/ssh/ssh_host_ed25519_key\
-HostKey /etc/ssh/ssh_host_rsa_key\
 \
 KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256\
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\
@@ -73,14 +74,14 @@ Ensure that PublicKey is available at GitHub to access repositories
 ### Update Base System and Restart
 ```sh
 /usr/sbin/freebsd-update fetch
-/usr/sbin/freebsd-update update
+/usr/sbin/freebsd-update install
 /sbin/shutdown -r now
 ```
 
 ### Load this GIT repo to start automatic process
 Please note: the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 ```sh
-/usr/sbin/pkg install -y git gh
+/usr/sbin/pkg install -y git gh mosh
 gh auth login
 cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
 chmod a+x ~/server_setup/base_install.sh
@@ -88,11 +89,35 @@ chmod a+x ~/server_setup/jail_install.sh
 ~/server_setup/base_install.sh
 ```
 Check output of base install for any quirk result.
-In case everything ran smoothly, restart SSH-daemon and firewall
+#### Check SSH-Daemon
+In case everything ran smoothly, check new configuration of SSH
+```sh
+service pf reload
+```
+If that is OK, restart SSH-daemon
 ```sh
 service sshd restart
-service pf restart
 ```
+#### Activate Firewall
+Now check also the Firewall
+```sh
+service pf reload
+```
+Try to mitigate any issues otherwise, all connection get lost and the system is stuck.
+So stop running PF-firewall after 5 minutes using crontab.
+```sh
+crontab -e 
+*/5 * * * *   service pf stop
+```
+Now try to start the firewall. 
+```sh
+service pf reload
+```
+If this ran smoothly without issues, modify rc.conf to start firewall autamtically at boot time and reboot one last time
+```sh
+reboot
+```
+#### Jails
 If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
 ~/server_setup/jail_install.sh

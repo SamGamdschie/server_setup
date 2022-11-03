@@ -84,11 +84,11 @@ git clone -o freebsd -b releng/13.1 https://git.FreeBSD.org/src.git /usr/src
 ## Clone GIT
 #mkdir -p /werzel/server_config
 gh auth login
-cd /werzel && gh repo clone SamGamdschie/server_config
+cd /werzel && gh repo clone https://github.com/SamGamdschie/server_config
 #mkdir -p /root/werzel_tools
-cd /root && gh repo clone SamGamdschie/werzel_tools
+cd /root && gh repo clone https://github.com/SamGamdschie/werzel_tools
 #mkdir -p /werzel/mejep
-cd /werzel && gh repo clone SamGamdschie/mejep
+cd /werzel && gh repo clone https://github.com/SamGamdschie/mejep
 
 ## Load Firewall Configuration
 #mv /etc/pf.conf /etc/pf.conf.old
@@ -110,9 +110,11 @@ cp /werzel/server_config/rc/rc.conf /etc/rc.conf
 cp /werzel/server_config/resolv.conf /etc/resolv.conf
 
 ### Sysctl
+mv /etc/sysctl.conf /etc/sysctl.conf.old
 cp /werzel/server_config/sysctl.conf /etc/sysctl.conf
 
 ### Make Conf
+mv /etc/make.conf /etc/make.conf.old
 cp /werzel/server_config/make.conf /etc/make.conf
 
 ### Profile
