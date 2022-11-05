@@ -29,8 +29,6 @@ zfs create                     -o exec=off -o setuid=off zroot/var/empty
 zfs create                     -o exec=off -o setuid=off zroot/var/run
 #zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 
-## Create encrypted ZFS base directory /werzel
-zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
 #zfs create -o mountpoint=/var/lib/mysql/data -o recordsize=16k \
 #           -o primarycache=metadata bench/data
 #zfs create -o mountpoint=/var/lib/mysql/log bench/log

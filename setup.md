@@ -27,50 +27,6 @@ su
 zfs set compression=zstd-5 zroot
 zfs set atime=off zroot
 ```
-### secure SSH (use port 2345 and group wheel)
-```sh
-set IP=`ifconfig | grep inet | grep -v 127 | grep -v inet6 | cut -w -f3`
-echo "### NEW SECURE SECURE SHELL ###\
-Protocol 2\
-Port 2345\
-ListenAddress $IP\
-\
-KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256\
-Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\
-\
-# Root login is not allowed for auditing reasons.\
-PermitRootLogin no\
-AllowGroups wheel\
-#AuthenticationMethods publickey\
-\
-# LogLevel VERBOSE logs users key fingerprint on login. Needed to have a clear audit track of which key was using to log in.\
-LogLevel VERBOSE\
-\
-Subsystem       sftp    /usr/libexec/sftp-server\  -f AUTHPRIV -l INFO\ " >> /etc/ssh/sshd_config
-```
-
-## Create SSH Key 
-Always use password! and ed25519 format
-```sh
-ssh-keygen -t ed25519
-```
-Create one keypair for root (su) for later use with GitHub, then logout and do the same for current user, add password to agent and restart service as root.
-```sh
-exit
-ssh-keygen -t ed25519
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-su
-service sshd restart
-```
-Check that SSH is accessible after restart using new terminal.
-Then add your public key to the user you want to connect with:
-```sh
-cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-```
-Ensure that PublicKey is available at GitHub to access repositories
-
 ### Update Base System and Restart
 ```sh
 /usr/sbin/freebsd-update fetch
@@ -78,14 +34,28 @@ Ensure that PublicKey is available at GitHub to access repositories
 /sbin/shutdown -r now
 ```
 
-### Load this GIT repo to start automatic process
-Please note: the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
+### Create encrypted ZFS base directory /werzel
+The ecnrypted directory will be used to store all sensitive data, which is not necessary to start the server (so you can unlock the encrypted directy using SSH)
+```sh
+zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt -o keyformat=passphrase zroot/werzel
+```
+**Please note:** the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
+
+### Load and base scripts from repository
+First, load some programs for the next steps.
+This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 ```sh
 /usr/sbin/pkg install -y git gh mosh
 gh auth login
+```
+Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
+```sh
 cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
 chmod a+x ~/server_setup/base_install.sh
 chmod a+x ~/server_setup/jail_install.sh
+```
+Now run the installer script, which creates encrypted ZFS drives and rewrites config.
+```sh
 ~/server_setup/base_install.sh
 ```
 Check output of base install for any quirk result.
@@ -117,12 +87,28 @@ If this ran smoothly without issues, modify rc.conf to start firewall autamtical
 ```sh
 reboot
 ```
+Don't forget to unlock the ZFS-directories after reboot
+```sh
+zfs load-key -r zroot/werzel
+zfs mount zroot/werzel
+```
 #### Jails
 If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
 ~/server_setup/jail_install.sh
 ```
 Reboot your server and do any needed post installation task.
+## Create SSH Key 
+For security, use SSH-Key instead of password for login (SSH)
+Always use password! and ed25519 format on your local machine
+```sh
+ssh-keygen -t ed25519
+```
+Then add your public key to the user you want to connect with:
+```sh
+cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+Check that SSH is accessible after restart using new terminal.
 
 # Tips'n'tricks
 ## ZFS Encryption
@@ -173,6 +159,18 @@ portmaster
 -s clean stale ports
 --check-depends
 ```
+
+## SSH
+Create one keypair for root (su) for later use with GitHub, then logout and do the same for current user, add password to agent and restart service as root.
+```sh
+exit
+ssh-keygen -t ed25519
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+su
+service sshd restart
+```
+
 
 # ALTE Grundinstallation
 Rescue-System 13
