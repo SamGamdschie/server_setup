@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Install Bastille
-portmaster --packages-build --delete-build-only bastille
-make -C /usr/ports/sysutils/bastille install clean
+
+portmaster --packages-build --delete-build-only --no-confirm sysutils/bastille
 
 # Activate Networking
 sysrc cloned_interfaces+=lo1
@@ -13,6 +13,9 @@ service netif cloneup
 sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_enable=YES
 sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_zpool=zroot
 sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_prefix="werzel/bastille"
+
+# Correct permissions
+chmod 0750 /usr/local/bastille
 
 # Create jails from templates
 ## first bootstrap everything

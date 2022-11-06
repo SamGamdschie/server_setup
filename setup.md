@@ -5,6 +5,7 @@ Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/
 ```sh
 wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.1-RELEASE-amd64.img
 dd if=mfsbsd-13.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
+reboot
 ```
 ## Base Installation
 Log on to the system via SSH with the password “mfsroot” and start installation
@@ -31,7 +32,6 @@ zfs set atime=off zroot
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
-/sbin/shutdown -r now
 ```
 
 ### Create encrypted ZFS base directory /werzel
@@ -62,33 +62,35 @@ Check output of base install for any quirk result.
 #### Check SSH-Daemon
 In case everything ran smoothly, check new configuration of SSH
 ```sh
-service pf reload
+service sshd reload
 ```
 If that is OK, restart SSH-daemon
 ```sh
 service sshd restart
 ```
 #### Activate Firewall
-Now check also the Firewall
-```sh
-service pf reload
-```
 Try to mitigate any issues otherwise, all connection get lost and the system is stuck.
 So stop running PF-firewall after 5 minutes using crontab.
 ```sh
 crontab -e 
 */5 * * * *   service pf stop
 ```
-Now try to start the firewall. 
+Now check also the Firewall
 ```sh
-service pf reload
+kldload pf
+service pf onereload
 ```
-If this ran smoothly without issues, modify rc.conf to start firewall autamtically at boot time and reboot one last time
+Then try to start the firewall. 
+```sh
+service pf onestart
+```
+If this ran smoothly without issues, modify rc.conf to start firewall automatically at boot time and reboot one last time
 ```sh
 reboot
 ```
 Don't forget to unlock the ZFS-directories after reboot
 ```sh
+su
 zfs load-key -r zroot/werzel
 zfs mount zroot/werzel
 ```
