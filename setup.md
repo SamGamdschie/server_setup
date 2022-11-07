@@ -45,7 +45,11 @@ zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt
 First, load some programs for the next steps.
 This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 ```sh
-/usr/sbin/pkg install -y git gh mosh
+env ASSUME_ALWAYS_YES=YES pkg bootstrap
+mkdir -p /usr/local/etc/pkg/repos
+echo 'FreeBSD: { url: 'pkg+http://pkg.FreeBSD.org/\$\{ABI\}/latest', enabled: yes }' > /usr/local/etc/pkg/repos/FreeBSD.conf
+pkg update && pkg upgrade
+pkg install -y git gh mosh ca_root_nss vim 
 gh auth login
 ```
 Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).

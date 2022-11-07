@@ -68,6 +68,10 @@ mv /var/zfs_back/run/* /var/run/
 # Install base software on host
 /usr/sbin/pkg install -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssl rsync
 
+# Change Shell to ZSH
+chsh -s /usr/local/bin/zsh root
+chsh -s /usr/local/bin/zsh thorsten
+
 ## Software Packages
 mkdir -p /var/db/portsnap
 
@@ -104,6 +108,7 @@ mv /etc/rc.conf /etc/rc.conf.old
 cp /werzel/server_config/rc/rc.conf /etc/rc.conf
 
 ### DNS Resolver
+mv /etc/resolv.conf /etc/resolv.conf.old
 cp /werzel/server_config/resolv.conf /etc/resolv.conf
 
 ### Sysctl
