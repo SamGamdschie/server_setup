@@ -88,10 +88,18 @@ Then try to start the firewall.
 ```sh
 service pf onestart
 ```
+Now try to reconnect to the system when the firewall is active.
+If this works perfectly, deactivate ``crontab`` entry and activate firewall
+```sh
+crontab -e
+sysrc pf_enable=YES
+service pf restart
+```
 If this ran smoothly without issues, modify rc.conf to start firewall automatically at boot time and reboot one last time
 ```sh
 reboot
 ```
+
 Don't forget to unlock the ZFS-directories after reboot
 ```sh
 su
