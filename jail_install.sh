@@ -19,10 +19,16 @@ chmod 0750 /usr/local/bastille
 
 # Create jails from templates
 ## first bootstrap everything
+# BASE
 bastille bootstrap 13.1-RELEASE update
 bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
 bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
+# MAIL
+bastille bootstrap https://github.com/SamGamdschie/bastille-clamav
+bastille bootstrap https://github.com/SamGamdschie/bastille-solr
+bastille bootstrap https://github.com/SamGamdschie/bastille-redis
 bastille bootstrap https://github.com/SamGamdschie/bastille-mail
+#WEB
 bastille bootstrap https://github.com/SamGamdschie/bastille-proxy
 bastille bootstrap https://github.com/SamGamdschie/bastille-postfixadmin
 bastille bootstrap https://github.com/SamGamdschie/bastille-phpmyadmin
@@ -41,13 +47,13 @@ bastille template letsencrypt SamGamdschie/bastille-letsencrypt
 
 # Mail
 bastille create clamav 13.1-RELEASE 10.0.0.13
-bastille template mail SamGamdschie/bastille-clamav
+bastille template clamav SamGamdschie/bastille-clamav
 
 bastille create solr 13.1-RELEASE 10.0.0.12
-bastille template mail SamGamdschie/bastille-solr
+bastille template solr SamGamdschie/bastille-solr
 
 bastille create redis 13.1-RELEASE 10.0.0.11
-bastille template mail SamGamdschie/bastille-redis
+bastille template redis SamGamdschie/bastille-redis
 
 bastille create mail 13.1-RELEASE 10.0.0.10
 bastille template mail SamGamdschie/bastille-mail
