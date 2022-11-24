@@ -45,6 +45,13 @@ bastille template db SamGamdschie/bastille-mariadb
 bastille create letsencrypt 13.1-RELEASE 10.0.0.2
 bastille template letsencrypt SamGamdschie/bastille-letsencrypt
 
+# Create first Certificates
+openssl dhparam -out /werzel/certificates/mail.werzelserver.de.512.pem 512
+openssl dhparam -out /werzel/certificates/mail.werzelserver.de.1024.pem 2048
+openssl dhparam -out /werzel/certificates/mail.werzelserver.de.dhparam.pem 4096
+# letsencrypt!!
+# Also try ECC!
+
 # Mail
 bastille create clamav 13.1-RELEASE 10.0.0.13
 bastille template clamav SamGamdschie/bastille-clamav
