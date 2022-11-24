@@ -54,7 +54,7 @@ gh auth login
 ```
 Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
 ```sh
-cd ~ && git clone https://github.com/SamGamdschie/server_setup.git
+cd ~ && gh repo clone https://github.com/SamGamdschie/server_setup.git
 chmod a+x ~/server_setup/base_install.sh
 chmod a+x ~/server_setup/jail_install.sh
 ```
@@ -334,7 +334,7 @@ pkg install -y git rsync
 ### GIT kopieren
 ```sh
 rsync -avz -e "ssh -p 2345" thorsten@werzel.de:/werzel/git/ /werzel/git/
-chown -R thorsten:staff /Werze/git/*
+chown -R thorsten:staff /werzel/git/*
 ```
 
 ### Lokale GIT-Repositories erstellen
