@@ -49,7 +49,7 @@ bastille template acme SamGamdschie/bastille-letsencrypt
 openssl dhparam -out /werzel/certificates/mail.werzelserver.de.512.pem 512
 openssl dhparam -out /werzel/certificates/mail.werzelserver.de.1024.pem 2048
 openssl dhparam -out /werzel/certificates/mail.werzelserver.de.dhparam.pem 4096
-bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --register-account  -m acme@werzelserver.de --server letsencrypt+
+bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --register-account  -m acme@werzelserver.de --server letsencrypt
 bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --set-default-ca --server letsencrypt
 bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --set-default-chain  --preferred-chain "ISRG"  --server letsencrypt
 bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --dns dns_inwx --issue -d 'werzelserver.de' -d '*.werzelserver.de' --server letsencrypt
