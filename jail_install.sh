@@ -44,7 +44,7 @@ bastille template db SamGamdschie/bastille-mariadb
 
 ### Certbot subdirs
 mkdir -p /werzel/certificates/live
-mkdir -p /werzel/certificates/larchive
+mkdir -p /werzel/certificates/archive
 
 bastille create certbot 13.1-RELEASE 10.0.0.2
 bastille template certbot SamGamdschie/bastille-letsencrypt
