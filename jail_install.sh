@@ -32,8 +32,8 @@ bastille bootstrap https://github.com/SamGamdschie/bastille-mail
 bastille bootstrap https://github.com/SamGamdschie/bastille-proxy
 bastille bootstrap https://github.com/SamGamdschie/bastille-postfixadmin
 bastille bootstrap https://github.com/SamGamdschie/bastille-phpmyadmin
-bastille bootstrap https://github.com/SamGamdschie/bastille-php
 bastille bootstrap https://github.com/SamGamdschie/bastille-nextcloud
+bastille bootstrap https://github.com/SamGamdschie/bastille-php
 bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 #bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 
@@ -88,28 +88,28 @@ bastille create phpmyadmin 13.1-RELEASE 10.0.0.22
 bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
 
 bastille create matomo 13.1-RELEASE 10.0.0.23
-bastille template matomo SamGamdschie/bastille-php
+bastille template matomo SamGamdschie/bastille-php --arg config=matamo
 
 bastille create cloud 13.1-RELEASE 10.0.0.30
 bastille template cloud SamGamdschie/bastille-nextcloud
 
 bastille create heimen 13.1-RELEASE 10.0.0.31
-bastille template heimen SamGamdschie/bastille-wordpress
+bastille template heimen SamGamdschie/bastille-wordpress --arg config=werzelheimen
 
 bastille create hobbingen 13.1-RELEASE 10.0.0.32
-bastille template hobbingen SamGamdschie/bastille-wordpress
+bastille template hobbingen SamGamdschie/bastille-wordpress --arg config=hobbingen
 
 bastille create seeadler 13.1-RELEASE 10.0.0.33
-bastille template seeadler SamGamdschie/bastille-wordpress
+bastille template seeadler SamGamdschie/bastille-wordpress --arg config=seeadler
 
 bastille create mejep 13.1-RELEASE 10.0.0.34
-bastille template mejep SamGamdschie/bastille-php
+bastille template mejep SamGamdschie/bastille-php --arg config=mejep
 
 bastille create werzel 13.1-RELEASE 10.0.0.35
-bastille template werzel SamGamdschie/bastille-php
+bastille template werzel SamGamdschie/bastille-php --arg config=werzel
 
 bastille create thorsten 13.1-RELEASE 10.0.0.36
-bastille template thorsten SamGamdschie/bastille-php
+bastille template thorsten SamGamdschie/bastille-php --arg config=thorsten
 
 bastille cp ALL /werzerl/server_config/hosts.bastille etc/hosts
 
