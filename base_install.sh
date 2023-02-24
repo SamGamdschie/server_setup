@@ -55,6 +55,7 @@ zfs create zroot/werzel/hobbingen
 zfs create zroot/werzel/seeadler
 
 #Check Encryption Status
+zfs get encryption /werzel/certificates
 zfs get encryption /werzel/server_config
 zfs get encryption /werzel/bastille
 zfs get encryption /werzel/mail
