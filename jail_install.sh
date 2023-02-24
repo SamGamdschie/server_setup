@@ -49,8 +49,7 @@ mkdir -p /werzel/certificates/archive
 bastille create certbot 13.1-RELEASE 10.0.0.2
 bastille template certbot SamGamdschie/bastille-letsencrypt
 
-# Create first Certificates
-openssl dhparam -out /werzel/certificates/mail.werzelserver.de.512.pem 512
+# Create all DH parameters & certificates, this will take time!
 openssl dhparam -out /werzel/certificates/mail.werzelserver.de.1024.pem 2048
 openssl dhparam -out /werzel/certificates/mail.werzelserver.de.dhparam.pem 4096
 openssl dhparam -out /werzel/certificates/k5sch3l.werzelserver.de.dhparam.pem 4096
@@ -58,18 +57,12 @@ openssl dhparam -out /werzel/certificates/werzelserver.de.dhparam.pem 4096
 openssl dhparam -out /werzel/certificates/werzel.de.dhparam.pem 4096
 openssl dhparam -out /werzel/certificates/hobbingen.de.dhparam.pem 4096
 openssl dhparam -out /werzel/certificates/seeadler.org.dhparam.pem 4096
-
 bastille cmd certbot certbot register --agree-tos -m 'letsencrypt@werzelserver.de'
 bastille cmd certbot certbot certonly -a dns-inwx -d 'werzelserver.de' -d '*.werzelserver.de' 
 bastille cmd certbot certbot certonly -a dns-inwx -d 'mail.werzelserver.de' -d 'mail.werzel.de'
 bastille cmd certbot certbot certonly -a dns-inwx -d 'werzel.de' -d '*.werzel.de' 
 bastille cmd certbot certbot certonly -a dns-inwx -d 'hobbingen.de' -d '*.hobbingen.de' 
 bastille cmd certbot certbot certonly -a dns-inwx -d 'seeadler.org' -d '*.seeadler.org'
-#bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --register-account  -m acme@werzelserver.de --server letsencrypt
-#bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --set-default-ca --server letsencrypt
-#bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --set-default-chain  --preferred-chain "ISRG"  --server letsencrypt
-#bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --dns dns_inwx --issue -d 'werzelserver.de' -d '*.werzelserver.de' --server letsencrypt
-#bastille cmd acme acme.sh --home /var/db/acme/.acme.sh/ --dns dns_inwx --issue -d 'werzelserver.de' -d '*.werzelserver.de' --keylength ec-256 --server letsencrypt
 
 # Mail
 bastille create clamav 13.1-RELEASE 10.0.0.13
