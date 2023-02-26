@@ -88,7 +88,7 @@ bastille create phpmyadmin 13.1-RELEASE 10.0.0.22
 bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
 
 bastille create matomo 13.1-RELEASE 10.0.0.23
-bastille template matomo SamGamdschie/bastille-php --arg config=matamo
+bastille template matomo SamGamdschie/bastille-php --arg config=matomo
 
 bastille create cloud 13.1-RELEASE 10.0.0.30
 bastille template cloud SamGamdschie/bastille-nextcloud
