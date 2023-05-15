@@ -17,6 +17,10 @@ sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_prefix="werzel/basti
 # Correct permissions
 chmod 0750 /usr/local/bastille
 
+### Certbot subdirs
+mkdir -p /werzel/certificates/live
+mkdir -p /werzel/certificates/archive
+
 # Create jails from templates
 ## first bootstrap everything
 # BASE
@@ -37,16 +41,30 @@ bastille bootstrap https://github.com/SamGamdschie/bastille-php
 bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 #bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 
-## now create jails
-# Base
+## now create all jails
 bastille create db 13.1-RELEASE 10.0.0.1
-bastille template db SamGamdschie/bastille-mariadb
-
-### Certbot subdirs
-mkdir -p /werzel/certificates/live
-mkdir -p /werzel/certificates/archive
-
 bastille create certbot 13.1-RELEASE 10.0.0.2
+bastille create mail 13.1-RELEASE 10.0.0.10
+bastille create redis 13.1-RELEASE 10.0.0.11
+bastille create solr 13.1-RELEASE 10.0.0.12
+bastille create clamav 13.1-RELEASE 10.0.0.13
+bastille create proxy 13.1-RELEASE 10.0.0.20
+bastille create postfixadmin 13.1-RELEASE 10.0.0.21
+bastille create phpmyadmin 13.1-RELEASE 10.0.0.22
+bastille create matomo 13.1-RELEASE 10.0.0.23
+bastille create cloud 13.1-RELEASE 10.0.0.30
+bastille create heimen 13.1-RELEASE 10.0.0.31
+bastille create hobbingen 13.1-RELEASE 10.0.0.32
+bastille create seeadler 13.1-RELEASE 10.0.0.33
+bastille create mejep 13.1-RELEASE 10.0.0.34
+bastille create werzel 13.1-RELEASE 10.0.0.35
+bastille create thorsten 13.1-RELEASE 10.0.0.36
+## Add new jails to all host files
+bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
+cat /werzel/server_config/hosts.bastille >> /etc/hosts
+## Templates ##
+# Base
+bastille template db SamGamdschie/bastille-mariadb
 bastille template certbot SamGamdschie/bastille-letsencrypt
 
 # Create all DH parameters & certificates, this will take time!
@@ -65,52 +83,23 @@ bastille cmd certbot certbot certonly -a dns-inwx -d 'hobbingen.de' -d '*.hobbin
 bastille cmd certbot certbot certonly -a dns-inwx -d 'seeadler.org' -d '*.seeadler.org'
 
 # Mail
-bastille create clamav 13.1-RELEASE 10.0.0.13
 bastille template clamav SamGamdschie/bastille-clamav
-
-bastille create solr 13.1-RELEASE 10.0.0.12
 bastille template solr SamGamdschie/bastille-solr
-
-bastille create redis 13.1-RELEASE 10.0.0.11
 bastille template redis SamGamdschie/bastille-redis
-
-bastille create mail 13.1-RELEASE 10.0.0.10
 bastille template mail SamGamdschie/bastille-mail
 
-# Web
-bastille create proxy 13.1-RELEASE 10.0.0.20
+# Web Admin
 bastille template proxy SamGamdschie/bastille-proxy
-
-bastille create postfixadmin 13.1-RELEASE 10.0.0.21
 bastille template postfixadmin SamGamdschie/bastille-postfixadmin
-
-bastille create phpmyadmin 13.1-RELEASE 10.0.0.22
 bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
-
-bastille create matomo 13.1-RELEASE 10.0.0.23
 bastille template matomo SamGamdschie/bastille-php --arg config=matomo
 bastille pkg matomo php82-matomo
 
-bastille create cloud 13.1-RELEASE 10.0.0.30
+#Web Services
 bastille template cloud SamGamdschie/bastille-nextcloud
-
-bastille create heimen 13.1-RELEASE 10.0.0.31
 bastille template heimen SamGamdschie/bastille-wordpress --arg config=werzelheimen
-
-bastille create hobbingen 13.1-RELEASE 10.0.0.32
 bastille template hobbingen SamGamdschie/bastille-wordpress --arg config=hobbingen
-
-bastille create seeadler 13.1-RELEASE 10.0.0.33
 bastille template seeadler SamGamdschie/bastille-wordpress --arg config=seeadler
-
-bastille create mejep 13.1-RELEASE 10.0.0.34
 bastille template mejep SamGamdschie/bastille-php --arg config=mejep
-
-bastille create werzel 13.1-RELEASE 10.0.0.35
 bastille template werzel SamGamdschie/bastille-php --arg config=werzel
-
-bastille create thorsten 13.1-RELEASE 10.0.0.36
 bastille template thorsten SamGamdschie/bastille-php --arg config=thorsten
-
-bastille cp ALL /werzerl/server_config/hosts.bastille etc/hosts
-
