@@ -59,6 +59,7 @@ bastille create seeadler 13.2-RELEASE 10.0.0.33
 bastille create mejep 13.2-RELEASE 10.0.0.34
 bastille create werzel 13.2-RELEASE 10.0.0.35
 bastille create thorsten 13.2-RELEASE 10.0.0.36
+
 ## Add new jails to all host files
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
 cat /werzel/server_config/hosts.bastille >> /etc/hosts
@@ -97,7 +98,7 @@ bastille template matomo SamGamdschie/bastille-php --arg config=matomo
 bastille pkg matomo php82-matomo
 
 #Web Services
-bastille template cloud SamGamdschie/bastille-nextcloud
+bastille template cloud SamGamdschie/bastille-nextcloud --arg php-version=80
 bastille template heimen SamGamdschie/bastille-wordpress --arg config=werzelheimen
 bastille template hobbingen SamGamdschie/bastille-wordpress --arg config=hobbingen
 bastille template seeadler SamGamdschie/bastille-wordpress --arg config=seeadler
