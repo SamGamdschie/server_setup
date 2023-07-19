@@ -53,7 +53,7 @@ bastille create postfixadmin 13.2-RELEASE 10.0.0.21
 bastille create phpmyadmin 13.2-RELEASE 10.0.0.22
 bastille create matomo 13.2-RELEASE 10.0.0.23
 bastille create cloud 13.2-RELEASE 10.0.0.30
-bastille create heimen 13.2-RELEASE 10.0.0.31
+bastille create heimen 13.-RELEASE 10.0.0.31
 bastille create hobbingen 13.2-RELEASE 10.0.0.32
 bastille create seeadler 13.2-RELEASE 10.0.0.33
 bastille create mejep 13.2-RELEASE 10.0.0.34
@@ -95,7 +95,7 @@ bastille template proxy SamGamdschie/bastille-proxy
 bastille template postfixadmin SamGamdschie/bastille-postfixadmin
 bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
 bastille template matomo SamGamdschie/bastille-php --arg config=matomo
-bastille pkg matomo php82-matomo
+bastille pkg php82-matomo matomo
 
 #Web Services
 bastille template cloud SamGamdschie/bastille-nextcloud --arg php-version=80
