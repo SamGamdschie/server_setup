@@ -59,6 +59,7 @@ bastille create seeadler 13.2-RELEASE 10.0.0.33
 bastille create mejep 13.2-RELEASE 10.0.0.34
 bastille create werzel 13.2-RELEASE 10.0.0.35
 bastille create thorsten 13.2-RELEASE 10.0.0.36
+bastille create autoconfig 13.2-RELEASE 10.0.0.37
 
 ## Add new jails to all host files
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
@@ -105,6 +106,7 @@ bastille template seeadler SamGamdschie/bastille-wordpress --arg config=seeadler
 bastille template mejep SamGamdschie/bastille-php --arg config=mejep
 bastille template werzel SamGamdschie/bastille-php --arg config=werzel
 bastille template thorsten SamGamdschie/bastille-php --arg config=thorsten
+bastille template autoconfig SamGamdschie/bastille-php --arg config=autoconfig
 
 # Use sendmail on host just to forward to postfix
 cd /etc/mail && make
