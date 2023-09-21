@@ -9,6 +9,8 @@ mv /var/empty /var/zfs_back
 mv /var/run /var/zfs_back/
 
 ## Create ZFS base directory (root)
+zfs set compression=zstd-5 zroot
+zfs set atime=off zroot
 zfs set exec=off zroot/usr/src
 zfs set exec=off zroot/var/mail
 
@@ -53,13 +55,17 @@ zfs create zroot/werzel/werzelheimen
 zfs create zroot/werzel/hobbingen
 # This is for Seeadler Storage
 zfs create zroot/werzel/seeadler
+# This is for Thorsten.Werzel Storage
+zfs create zroot/werzel/thorsten
+# This is for Autoconfig Storage (Mail-Client)
+zfs create zroot/werzel/autoconfig
 
 #Check Encryption Status
 zfs get encryption /werzel/certificates
 zfs get encryption /werzel/server_config
 zfs get encryption /werzel/bastille
 zfs get encryption /werzel/mail
-zfs get encryption /werzel/mariadb
+zfs get encryption /werzel/mariadb_data
 
 ## Move backed data back
 mv /var/zfs_back/db/* /var/db/
@@ -82,7 +88,8 @@ mkdir -p /var/db/portsnap
 
 ## FreeBSD SRC which is neede for Jails!
 rm -rf /usr/src/* /usr/src/.*
-git clone -o freebsd -b releng/13.1 https://git.FreeBSD.org/src.git /usr/src
+# Clone current used version of FreeBSD
+git clone -o freebsd -b releng/13.2 https://git.FreeBSD.org/src.git /usr/src
 
 ## Clone GIT
 #mkdir -p /werzel/server_config

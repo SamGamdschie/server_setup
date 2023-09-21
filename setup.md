@@ -3,8 +3,8 @@
 Start the server in Rescue system using any Linux as target.
 Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
-wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.1-RELEASE-amd64.img
-dd if=mfsbsd-13.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
+wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.2-RELEASE-amd64.img
+dd if=mfsbsd-13.2-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 reboot
 ```
 ## Base Installation
