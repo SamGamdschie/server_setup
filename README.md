@@ -2,7 +2,7 @@
 This Guide and Scripts are used  for setting up new FreeBSD/ZFS servers.
 
 The scripts and the setup is designed for [FreeBSD 13](https://www.freebsd.org) on a [Hetzner-Server](https://www.hetzner.com) using `mfsBSD` with `bsdinstallimage`.
-It is using a default FreeBSD with ZFS-on-root as base, tweaks some system parameters and prepare a complex seup of jails for a containerised approach of running mail, and web services.
+It is using a default FreeBSD with ZFS-on-root as base, tweaks some system parameters and prepare a complex setup of jails for a containerised approach of running mail, and web services.
 Feel free to fork and adapt the scripts.
 
 1. Run the base installation documented in the [setup document](setup.md)
