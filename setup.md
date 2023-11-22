@@ -32,7 +32,27 @@ zfs set atime=off zroot
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
+restart
 ```
+#### Optionally upgrade system
+If mfsBSD is not providing recent FreeBSD versions, you can upgrade the system. 
+It make sense to do this as early as possible to minimize migration effort.
+```sh
+freebsd-update -r 14.0-RELEASE upgrade
+freebsd-update install
+reboot
+pkg-static install -f pkg
+pkg update
+pkg upgrade
+freebsd-update install
+reboot
+freebsd-version
+```
+This process needs two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
+
+## First Start of installed system
+Mind to use your newly created user to login via SSH.
+It might be useful to adjust the settings of SSH-daemon, however the default process will do this, too, at a later point. 
 
 ### Create encrypted ZFS base directory /werzel
 The ecnrypted directory will be used to store all sensitive data, which is not necessary to start the server (so you can unlock the encrypted directy using SSH)
@@ -50,17 +70,24 @@ mkdir -p /usr/local/etc/pkg/repos
 echo 'FreeBSD: { url: 'pkg+http://pkg.FreeBSD.org/\$\{ABI\}/latest', enabled: yes }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 pkg update && pkg upgrade
 pkg install -y git gh mosh ca_root_nss vim 
-gh auth login
 ```
 Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
 ```sh
+gh auth login
+```
+You can use also other methods to authenticate at GitHub, but ensure that you can access the desired repos.
+```sh
 cd ~ && gh repo clone https://github.com/SamGamdschie/server_setup.git
-chmod a+x ~/server_setup/base_install.sh
+chmod a+x ~/server_setup/zfs_install.sh
+chmod a+x ~/server_setup/packages_install.sh
+chmod a+x ~/server_setup/base_config_install.sh
 chmod a+x ~/server_setup/jail_install.sh
 ```
 Now run the installer script, which creates encrypted ZFS drives and rewrites config.
 ```sh
-~/server_setup/base_install.sh
+~/server_setup/zfs_install.sh
+~/server_setup/packages_install.sh
+~/server_setup/base_config_install.sh
 ```
 Check output of base install for any quirk result.
 #### Check SSH-Daemon
