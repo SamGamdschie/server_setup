@@ -61,6 +61,13 @@ zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt
 ```
 **Please note:** the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 
+#### Create machine SSH Key 
+To allow access to GitHub (or other repos), create a key of the machine
+Always use password!
+```sh
+ssh-keygen -t ed25519
+```
+
 ### Load and base scripts from repository
 First, load some programs for the next steps.
 This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
@@ -81,7 +88,9 @@ cd ~ && gh repo clone https://github.com/SamGamdschie/server_setup.git
 chmod a+x ~/server_setup/zfs_install.sh
 chmod a+x ~/server_setup/packages_install.sh
 chmod a+x ~/server_setup/base_config_install.sh
-chmod a+x ~/server_setup/jail_install.sh
+chmod a+x ~/server_setup/jail_creation.sh
+chmod a+x ~/server_setup/jail_certification.sh
+chmod a+x ~/server_setup/jail_templates.sh
 ```
 Now run the installer script, which creates encrypted ZFS drives and rewrites config.
 ```sh
@@ -89,7 +98,20 @@ Now run the installer script, which creates encrypted ZFS drives and rewrites co
 ~/server_setup/packages_install.sh
 ~/server_setup/base_config_install.sh
 ```
-Check output of base install for any quirk result.
+Check output of base install for any quirky result.
+
+### Create SSH Key 
+For security, use SSH-Key instead of password for login (SSH)
+Always use password! and ed25519 format on your *local machine*:
+```sh
+ssh-keygen -t ed25519
+```
+Then add your public key to the user you want to connect with:
+```sh
+cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+Check that SSH is accessible after restart using new terminal.
+
 #### Check SSH-Daemon
 In case everything ran smoothly, check new configuration of SSH
 ```sh
@@ -136,20 +158,11 @@ zfs mount zroot/werzel
 #### Jails
 If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
-~/server_setup/jail_install.sh
+~/server_setup/jail_creation.sh
+~/server_setup/jail_certification.sh
+~/server_setup/jail_templates.sh
 ```
 Reboot your server and do any needed post installation task.
-## Create SSH Key 
-For security, use SSH-Key instead of password for login (SSH)
-Always use password! and ed25519 format on your local machine
-```sh
-ssh-keygen -t ed25519
-```
-Then add your public key to the user you want to connect with:
-```sh
-cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-```
-Check that SSH is accessible after restart using new terminal.
 
 # Tips'n'tricks
 ## ZFS Encryption

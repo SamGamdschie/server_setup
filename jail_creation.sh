@@ -64,3 +64,7 @@ bastille create autoconfig 13.2-RELEASE 10.0.0.37
 ## Add new jails to all host files
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
 cat /werzel/server_config/hosts.bastille >> /etc/hosts
+
+### Set DMA Configuration on Jails and Host
+bastille cp ALL /werzel/server_config/dma/dma.conf etc/dma/dma.conf
+cp /werzel/server_config/dma/dma.conf /etc/dma/dma.conf
