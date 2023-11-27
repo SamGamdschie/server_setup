@@ -100,7 +100,7 @@ Now run the installer script, which creates encrypted ZFS drives and rewrites co
 ```
 Check output of base install for any quirky result.
 
-### Create SSH Key 
+### Create local SSH Key (if not already done)
 For security, use SSH-Key instead of password for login (SSH)
 Always use password! and ed25519 format on your *local machine*:
 ```sh
