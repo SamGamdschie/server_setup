@@ -7,12 +7,9 @@
 chsh -s /usr/local/bin/zsh root
 chsh -s /usr/local/bin/zsh thorsten
 
-## Software Packages
-mkdir -p /var/db/portsnap
-
-/usr/sbin/portsnap fetch
-/usr/sbin/portsnap extract
-/usr/sbin/portsnap fetch update
+## Software Packages from Ports using GIT (since 14+)
+mkdir -p /usr/ports
+git clone https://git.freebsd.org/ports.git /usr/ports
 
 ## FreeBSD SRC which is neede for Jails!
 rm -rf /usr/src/* /usr/src/.*

@@ -74,10 +74,11 @@ This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 ```sh
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 mkdir -p /usr/local/etc/pkg/repos
-echo 'FreeBSD: { url: 'pkg+http://pkg.FreeBSD.org/\$\{ABI\}/latest', enabled: yes }' > /usr/local/etc/pkg/repos/FreeBSD.conf
-pkg update && pkg upgrade
+echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
+pkg update -f && pkg upgrade
 pkg install -y git gh mosh ca_root_nss vim 
 ```
+
 Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
 ```sh
 gh auth login
