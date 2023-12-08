@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Workaround for ZFS error: 
+# https://lists.freebsd.org/archives/freebsd-stable/2023-November/001726.html
+echo vfs.zfs.dmu_offset_next_sync=0 >> /etc/sysctl.conf
+sysctl vfs.zfs.dmu_offset_next_sync=0
+# Should be reverted after fix in OpenZFS 2.2
+
 ### Move old files to backup dir
 mkdir -p /var/zfs_back/db
 mkdir -p /var/zfs_back/empty
