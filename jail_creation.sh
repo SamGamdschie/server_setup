@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# Install Bastille
-
-portmaster --packages-build --delete-build-only --no-confirm sysutils/bastille
+# Install Bastille from PKG
+pkg install bastlle
 
 # Activate Networking
 sysrc cloned_interfaces+=lo1
