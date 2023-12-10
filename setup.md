@@ -63,7 +63,6 @@ This process needs two (2!) reboots and a lot of time, but you'll have the most 
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
-pkg-static install -f pkg
 pkg update
 pkg upgrade
 reboot
