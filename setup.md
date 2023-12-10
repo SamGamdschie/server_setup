@@ -1,7 +1,15 @@
 # Base System
 ## FreeBSD installation
-Start the server in Rescue system using any Linux as target.
-Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
+Start the server in Rescue system using any Linux as target and check disk parameters:
+```sh
+smartctl -a /dev/nvme0n1
+```
+Normally  NVME-disks run in 4k byte mode and not in 512 byte mode 
+You can reformat the NVME device with the following command
+```sh
+nvme format /dev/nvme1n1 -l $ID
+```
+Now, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
 wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.0-RELEASE-amd64.img
 dd if=mfsbsd-13.2-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
