@@ -12,7 +12,7 @@ nvme format /dev/nvme1n1 -l $ID
 Now, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
 wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.0-RELEASE-amd64.img
-dd if=mfsbsd-13.2-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
+dd if=mfsbsd-14.0-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 reboot
 ```
 ## Base Installation
