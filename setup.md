@@ -64,6 +64,7 @@ This process needs up to two (2!) reboots and a lot of time, but you'll have the
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
+env ASSUME_ALWAYS_YES=YES pkg bootstrap
 pkg update
 pkg upgrade
 reboot
@@ -96,7 +97,6 @@ ssh-keygen -t ed25519
 First, load some programs for the next steps.
 This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 ```sh
-env ASSUME_ALWAYS_YES=YES pkg bootstrap
 mkdir -p /usr/local/etc/pkg/repos
 echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 pkg update -f && pkg upgrade
