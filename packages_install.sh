@@ -8,7 +8,6 @@ chsh -s /usr/local/bin/zsh root
 chsh -s /usr/local/bin/zsh thorsten
 
 ## Software Packages from Ports using GIT (since 14+)
-mkdir -p /usr/ports
 git clone https://git.freebsd.org/ports.git /usr/ports
 
 ## FreeBSD SRC which is neede for Jails!

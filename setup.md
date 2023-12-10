@@ -12,7 +12,7 @@ nvme format /dev/nvme1n1 -l $ID
 Now, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
 wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.0-RELEASE-amd64.img
-dd if=mfsbsd-13.2-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
+dd if=mfsbsd-14.0-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 reboot
 ```
 ## Base Installation
@@ -26,11 +26,18 @@ If unsure check that Bootcode is available on the disks.
 ```sh
 gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 /dev/nvd
 ```
+Now restart your machine as base install is now complete
+```sh
+bsdinstall
+```
+
 ## First Updates and Tweaks
-Start everything as root
+Login to your system using SSH with your newly created user.
+*Keep in mind:* Start everything as root (only mentioned here, but nearly always needed)
 ```sh
 su
 ```
+
 ### ZFS
 Use Compression, it's mostly a good choice if using modern algorithms:
 ```sh
@@ -53,15 +60,16 @@ reboot
 ```
 
 ### Update Base System and Restart
-This process needs two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
+This process needs up to two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
-pkg-static install -f pkg
+env ASSUME_ALWAYS_YES=YES pkg bootstrap
 pkg update
 pkg upgrade
 reboot
-freebsd-update install
+/usr/sbin/freebsd-update fetch
+/usr/sbin/freebsd-update install
 reboot
 freebsd-version
 ```
@@ -89,7 +97,6 @@ ssh-keygen -t ed25519
 First, load some programs for the next steps.
 This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 ```sh
-env ASSUME_ALWAYS_YES=YES pkg bootstrap
 mkdir -p /usr/local/etc/pkg/repos
 echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 pkg update -f && pkg upgrade
@@ -107,7 +114,7 @@ chmod a+x ~/server_setup/zfs_install.sh
 chmod a+x ~/server_setup/packages_install.sh
 chmod a+x ~/server_setup/base_config_install.sh
 chmod a+x ~/server_setup/jail_creation.sh
-chmod a+x ~/server_setup/jail_certification.sh
+chmod a+x ~/server_setup/jail_certificates.sh
 chmod a+x ~/server_setup/jail_templates.sh
 ```
 Now run the installer script, which creates encrypted ZFS drives and rewrites config.
