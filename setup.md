@@ -26,7 +26,13 @@ If unsure check that Bootcode is available on the disks.
 ```sh
 gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 /dev/nvd
 ```
+Now restart your machine as base install is now complete
+```sh
+bsdinstall
+```
+
 ## First Updates and Tweaks
+Login to your system using SSH with your newly created user.
 Start everything as root
 ```sh
 su
