@@ -12,9 +12,9 @@ mkdir -p /usr/ports
 git clone https://git.freebsd.org/ports.git /usr/ports
 
 ## FreeBSD SRC which is neede for Jails!
-rm -rf /usr/src/* /usr/src/.*
 # Clone current used version of FreeBSD
-git clone -o freebsd -b releng/13.2 https://git.FreeBSD.org/src.git /usr/src
+mv /usr/src /usr/src.bak
+git clone --branch releng/14.0 https://git.FreeBSD.org/src.git /usr/src
 
 ## Clone GIT
 #mkdir -p /werzel/server_config

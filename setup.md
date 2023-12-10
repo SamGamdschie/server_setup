@@ -3,7 +3,7 @@
 Start the server in Rescue system using any Linux as target.
 Restart into Linux, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
-wget https://mfsbsd.vx.sk/files/images/13/amd64/mfsbsd-13.2-RELEASE-amd64.img
+wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.0-RELEASE-amd64.img
 dd if=mfsbsd-13.2-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 reboot
 ```
@@ -24,16 +24,17 @@ Start everything as root
 su
 ```
 ### ZFS
+Use Compression, it's mostly a good choice if using modern algorithms:
 ```sh
 zfs set compression=zstd-5 zroot
+```
+You can use also LZ4, instead of ZSTD (like ZSTD-3 or ZSTD-5). LZ4 has has doubled performance at two/thirds of compression ration (1,9:1 vs. 2,9:1), see [OpenZFS 2.0](https://github.com/openzfs/zfs/pull/10278).
+
+Also disable Access time, if you do not need this feature. Enabling reallys slows down your disk performance.
+```sh
 zfs set atime=off zroot
 ```
-### Update Base System and Restart
-```sh
-/usr/sbin/freebsd-update fetch
-/usr/sbin/freebsd-update install
-restart
-```
+
 #### Optionally upgrade system
 If mfsBSD is not providing recent FreeBSD versions, you can upgrade the system. 
 It make sense to do this as early as possible to minimize migration effort.
@@ -41,14 +42,22 @@ It make sense to do this as early as possible to minimize migration effort.
 freebsd-update -r 14.0-RELEASE upgrade
 freebsd-update install
 reboot
+```
+
+### Update Base System and Restart
+This process needs two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
+```sh
+/usr/sbin/freebsd-update fetch
+/usr/sbin/freebsd-update install
 pkg-static install -f pkg
 pkg update
 pkg upgrade
+reboot
 freebsd-update install
 reboot
 freebsd-version
 ```
-This process needs two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
+
 
 ## First Start of installed system
 Mind to use your newly created user to login via SSH.
