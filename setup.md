@@ -114,7 +114,7 @@ chmod a+x ~/server_setup/zfs_install.sh
 chmod a+x ~/server_setup/packages_install.sh
 chmod a+x ~/server_setup/base_config_install.sh
 chmod a+x ~/server_setup/jail_creation.sh
-chmod a+x ~/server_setup/jail_certification.sh
+chmod a+x ~/server_setup/jail_certificates.sh
 chmod a+x ~/server_setup/jail_templates.sh
 ```
 Now run the installer script, which creates encrypted ZFS drives and rewrites config.
