@@ -92,6 +92,11 @@ Always use password!
 ```sh
 ssh-keygen -t ed25519
 ```
+Now add your password to the agent (after each restart!)
+```sh
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
 
 ### Load and base scripts from repository
 First, load some programs for the next steps.
@@ -100,22 +105,17 @@ This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 mkdir -p /usr/local/etc/pkg/repos
 echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 pkg update -f && pkg upgrade
-pkg install -y git gh mosh ca_root_nss vim 
+pkg install -y git mosh ca_root_nss vim 
 ```
 
-Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
+Use your generated to key authenticate against your repositories.
 ```sh
-gh auth login
+cat /root/.ssh/id_ed25519.pub
 ```
+
 You can use also other methods to authenticate at GitHub, but ensure that you can access the desired repos.
 ```sh
-cd ~ && gh repo clone https://github.com/SamGamdschie/server_setup.git
-chmod a+x ~/server_setup/zfs_install.sh
-chmod a+x ~/server_setup/packages_install.sh
-chmod a+x ~/server_setup/base_config_install.sh
-chmod a+x ~/server_setup/jail_creation.sh
-chmod a+x ~/server_setup/jail_certificates.sh
-chmod a+x ~/server_setup/jail_templates.sh
+cd ~ && git clone git@github.com:SamGamdschie/server_setup.git
 ```
 Now run the installer script, which creates encrypted ZFS drives and rewrites config.
 ```sh

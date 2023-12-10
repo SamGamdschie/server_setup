@@ -17,8 +17,8 @@ git clone --branch releng/14.0 https://git.FreeBSD.org/src.git /usr/src
 
 ## Clone GIT
 #mkdir -p /werzel/server_config
-cd /werzel && gh repo clone SamGamdschie/server_config
+cd /werzel && git clone git@github.com:SamGamdschie/server_config
 #mkdir -p /root/werzel_tools
-cd /root && gh repo clone SamGamdschie/werzel_tools
+cd /root && git clone git@github.com:SamGamdschie/werzel_tools
 #mkdir -p /werzel/mejep
-cd /werzel && gh repo clone SamGamdschie/mejep
+cd /werzel && git clone git@github.com:SamGamdschie/mejep
