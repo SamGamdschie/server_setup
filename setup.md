@@ -33,10 +33,11 @@ bsdinstall
 
 ## First Updates and Tweaks
 Login to your system using SSH with your newly created user.
-Start everything as root
+*Keep in mind:* Start everything as root (only mentioned here, but nearly always needed)
 ```sh
 su
 ```
+
 ### ZFS
 Use Compression, it's mostly a good choice if using modern algorithms:
 ```sh
@@ -59,14 +60,15 @@ reboot
 ```
 
 ### Update Base System and Restart
-This process needs two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
+This process needs up to two (2!) reboots and a lot of time, but you'll have the most recent FreeBSD version on your machine.
 ```sh
 /usr/sbin/freebsd-update fetch
 /usr/sbin/freebsd-update install
 pkg update
 pkg upgrade
 reboot
-freebsd-update install
+/usr/sbin/freebsd-update fetch
+/usr/sbin/freebsd-update install
 reboot
 freebsd-version
 ```
