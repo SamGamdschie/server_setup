@@ -24,8 +24,8 @@ zfs set exec=off zroot/var/mail
 #zfs create                                               zroot/usr
 #zfs create                                               zroot/usr/home
 #zfs create -o compression=zstd-5              -o setuid=off zroot/usr/ports
-zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
-zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
+#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/distfiles
+#zfs create -o compression=off  -o exec=off -o setuid=off zroot/usr/ports/packages
 #zfs create -o compression=zstd-5  -o exec=off -o setuid=off zroot/usr/src
 #zfs create                                               zroot/var
 #zfs create -o compression=lz4  -o exec=off -o setuid=off zroot/var/crash
