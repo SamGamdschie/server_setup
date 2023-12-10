@@ -70,7 +70,7 @@ zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt
 ```
 **Please note:** the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 
-#### Create machine SSH Key 
+#### Create machine's SSH Key 
 To allow access to GitHub (or other repos), create a key of the machine
 Always use password!
 ```sh
