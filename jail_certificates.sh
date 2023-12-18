@@ -18,3 +18,11 @@ bastille cmd certbot certbot certonly -a dns-inwx -d 'mail.werzelserver.de' -d '
 bastille cmd certbot certbot certonly -a dns-inwx -d 'werzel.de' -d '*.werzel.de' 
 bastille cmd certbot certbot certonly -a dns-inwx -d 'hobbingen.de' -d '*.hobbingen.de' 
 bastille cmd certbot certbot certonly -a dns-inwx -d 'seeadler.org' -d '*.seeadler.org'
+
+bastille cmd certbot SLEEPTIME=$(awk 'BEGIN{srand(); print int(rand()*(3600+1))}'); echo "0 0,12 * * * root sleep $SLEEPTIME && certbot renew -q" | tee -a /etc/crontab > /dev/null
+
+# Convert Private Key and copy Certificates for MariaDB
+mkdir -p /werzel/certificates/live/mysql
+openssl ec -in /werzel/certificates/live/werzelserver.de/privkey.pem -out /werzel/certificates/live/mysql/privkey.pem
+cp /werzel/certificates/live/werzelserver.de/fullchain.pem /werzel/certificates/live/mysql/fullchain.pem
+cp /werzel/certificates/live/werzelserver.de/chain.pem /werzel/certificates/live/mysql/chain.pem

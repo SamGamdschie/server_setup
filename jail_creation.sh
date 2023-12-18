@@ -13,17 +13,19 @@ sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_enable=YES
 sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_zpool=zroot
 sysrc -f /usr/local/etc/bastille/bastille.conf bastille_zfs_prefix="werzel/bastille"
 
-# Correct permissions
-chmod 0750 /usr/local/bastille
-
 ### Certbot subdirs
 mkdir -p /werzel/certificates/live
 mkdir -p /werzel/certificates/archive
 
+# Correct permissions
+mkdir -p /usr/local/bastille
+chmod 0750 /usr/local/bastille
+
 # Create jails from templates
-## first bootstrap everything
-# BASE
+## first bootstrap current version of FreeBSD
 bastille bootstrap 14.0-RELEASE update
+
+# BASE
 bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
 bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
 # MAIL

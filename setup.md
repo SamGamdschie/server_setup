@@ -131,6 +131,10 @@ Always use password! and ed25519 format on your *local machine*:
 ```sh
 ssh-keygen -t ed25519
 ```
+Now, add it to your local key agaent.
+```sh
+ssh-add ~/.ssh/id_ed25519
+```
 Then add your public key to the user you want to connect with:
 ```sh
 cat ~/.ssh/id_ed25519.pub | ssh USER@HOST "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
@@ -184,7 +188,7 @@ zfs mount zroot/werzel
 If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
 ~/server_setup/jail_creation.sh
-~/server_setup/jail_certification.sh
+~/server_setup/jail_certificates.sh
 ~/server_setup/jail_templates.sh
 ```
 Reboot your server and do any needed post installation task.
