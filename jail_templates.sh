@@ -14,7 +14,7 @@ bastille template proxy SamGamdschie/bastille-proxy
 bastille template postfixadmin SamGamdschie/bastille-postfixadmin
 bastille template phpmyadmin SamGamdschie/bastille-phpmyadmin
 bastille template matomo SamGamdschie/bastille-php --arg config=matomo
-bastille pkg php82-matomo matomo
+bastille pkg matomo install php82-matomo
 
 #Web Services
 bastille template cloud SamGamdschie/bastille-nextcloud --arg php-version=80

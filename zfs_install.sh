@@ -51,6 +51,8 @@ zfs create                                               zroot/werzel/mail
 zfs create -o atime=off -o recordsize=16k -o primarycache=metadata zroot/werzel/mariadb_data
 zfs create -o atime=off -o exec=off zroot/werzel/mariadb_log
 zfs create -o atime=off -o exec=off zroot/werzel/mariadb_backup
+# This is for Matomo Storage
+zfs create zroot/werzel/matomo
 # This is for NextCloud Storage
 zfs create zroot/werzel/nextcloud
 # This is for Middle-earth Jeopardy
@@ -72,6 +74,7 @@ zfs get encryption /werzel/server_config
 zfs get encryption /werzel/bastille
 zfs get encryption /werzel/mail
 zfs get encryption /werzel/mariadb_data
+zfs get encryption /werzel/matomo
 
 ## Move backed data back
 mv /var/zfs_back/db/* /var/db/
