@@ -188,7 +188,19 @@ zfs mount zroot/werzel
 If you can still connect to the system, the base install is complete so you can start installation of jails
 ```sh
 ~/server_setup/jail_creation.sh
+```
+Now reset PKG from `quarterly` to `latest`:
+```sh
+vi /usr/local/bastille/releases/14.0-RELEASE/etc/pkg/FreeBSD.conf 
+```
+
+Then create certificates using Letsencrypt:
+```sh
 ~/server_setup/jail_certificates.sh
+```
+
+Now create all your jails (maybe run the commands manually)
+```sh
 ~/server_setup/jail_templates.sh
 ```
 Reboot your server and do any needed post installation task.
