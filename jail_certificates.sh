@@ -26,3 +26,4 @@ mkdir -p /werzel/certificates/live/mysql
 openssl ec -in /werzel/certificates/live/werzelserver.de/privkey.pem -out /werzel/certificates/live/mysql/privkey.pem
 cp /werzel/certificates/live/werzelserver.de/fullchain.pem /werzel/certificates/live/mysql/fullchain.pem
 cp /werzel/certificates/live/werzelserver.de/chain.pem /werzel/certificates/live/mysql/chain.pem
+chown 88:wheel * 
