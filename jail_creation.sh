@@ -54,7 +54,7 @@ bastille create postfixadmin 14.0-RELEASE 10.0.0.21
 bastille create phpmyadmin 14.0-RELEASE 10.0.0.22
 bastille create matomo 14.0-RELEASE 10.0.0.23
 bastille create cloud 14.0-RELEASE 10.0.0.30
-bastille create heimen 13.-RELEASE 10.0.0.31
+bastille create heimen 14.0-RELEASE 10.0.0.31
 bastille create hobbingen 14.0-RELEASE 10.0.0.32
 bastille create seeadler 14.0-RELEASE 10.0.0.33
 bastille create mejep 14.0-RELEASE 10.0.0.34
@@ -66,6 +66,13 @@ bastille create autoconfig 14.0-RELEASE 10.0.0.37
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
 cat /werzel/server_config/hosts.bastille >> /etc/hosts
 
+bastille cp ALL /werzel/server_config/resolv.conf etc/resolv.conf
+cp /werzel/server_config/resolv.conf /etc/resolv.conf
+
 ### Set DMA Configuration on Jails and Host
 bastille cp ALL /werzel/server_config/dma/dma.conf etc/dma/dma.conf
 cp /werzel/server_config/dma/dma.conf /etc/dma/dma.conf
+
+### Write Period Conf from Repo
+bastille cp ALL /werzel/server_config/periodic.conf.local etc/periodic.conf.local
+ln -s /werzel/server_config/periodic.conf.local /etc/periodic.conf.local
