@@ -1,11 +1,15 @@
 #!/bin/sh
 
 # Install base software on host
-/usr/sbin/pkg install -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssl rsync
+/usr/sbin/pkg install -y ca_root_nss subversion mosh vim curl iftop portmaster sudo zsh coreutils tmux openssl rsync py39-borgbackup
 
 # Change Shell to ZSH
 chsh -s /usr/local/bin/zsh root
 chsh -s /usr/local/bin/zsh thorsten
+
+# Activate and allow FUSE (needed for BorgBackup)
+kldload fusefs
+sysrc fusefs_load="YES"
 
 ## Software Packages from Ports using GIT (since 14+)
 git clone https://git.freebsd.org/ports.git /usr/ports
