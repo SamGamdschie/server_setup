@@ -67,6 +67,8 @@ zfs create zroot/werzel/seeadler
 zfs create zroot/werzel/thorsten
 # This is for Autoconfig Storage (Mail-Client)
 zfs create zroot/werzel/autoconfig
+# This is for Paperless (Scanner / DMS)
+zfs create zroot/werzel/paperless
 
 #Check Encryption Status
 zfs get encryption /werzel/certificates
@@ -75,6 +77,7 @@ zfs get encryption /werzel/bastille
 zfs get encryption /werzel/mail
 zfs get encryption /werzel/mariadb_data
 zfs get encryption /werzel/matomo
+zfs get encryption /werzel/paperless
 
 ## Move backed data back
 mv /var/zfs_back/db/* /var/db/

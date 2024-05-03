@@ -38,6 +38,7 @@ bastille bootstrap https://github.com/SamGamdschie/bastille-proxy
 bastille bootstrap https://github.com/SamGamdschie/bastille-postfixadmin
 bastille bootstrap https://github.com/SamGamdschie/bastille-phpmyadmin
 bastille bootstrap https://github.com/SamGamdschie/bastille-nextcloud
+bastille bootstrap https://github.com/SamGamdschie/bastille-paperless_ngx
 bastille bootstrap https://github.com/SamGamdschie/bastille-php
 bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 #bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
@@ -61,6 +62,7 @@ bastille create mejep 14.0-RELEASE 10.0.0.34
 bastille create werzel 14.0-RELEASE 10.0.0.35
 bastille create thorsten 14.0-RELEASE 10.0.0.36
 bastille create autoconfig 14.0-RELEASE 10.0.0.37
+bastille create paperless 14.0-RELEASE 10.0.0.38
 
 ## Add new jails to all host files
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts
