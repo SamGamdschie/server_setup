@@ -83,3 +83,8 @@ zfs get encryption /werzel/paperless
 mv /var/zfs_back/db/* /var/db/
 mv /var/zfs_back/empty/* /var/empty/
 mv /var/zfs_back/run/* /var/run/
+
+##Create some subfolders, which are required
+mkdir -p /werzel/paperless/consume/input
+mkdir -p /werzel/paperless/media/documents
+mkdir -p /werzel/paperless/nltkdata

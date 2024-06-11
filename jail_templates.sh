@@ -25,4 +25,4 @@ bastille template mejep SamGamdschie/bastille-php --arg config=mejep
 bastille template werzel SamGamdschie/bastille-php --arg config=werzel
 bastille template thorsten SamGamdschie/bastille-php --arg config=thorsten
 bastille template autoconfig SamGamdschie/bastille-php --arg config=autoconfig
-bastille template paperless SamGamdschie/bastille-paperless_ngx --arg py-version=39
+bastille template paperless SamGamdschie/bastille-paperless_ngx --arg py-version=311
