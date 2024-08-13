@@ -4,15 +4,15 @@ Start the server in Rescue system using any Linux as target and check disk param
 ```sh
 smartctl -a /dev/nvme0n1
 ```
-Normally  NVME-disks run in 4k byte mode and not in 512 byte mode 
+Normally  NVME-disks run in 4k byte mode and not in 512 byte mode
 You can reformat the NVME device with the following command
 ```sh
 nvme format /dev/nvme1n1 -l $ID
 ```
 Now, download a recent [mfsBSD image](https://mfsbsd.vx.sk/files/images/) and reboot into this using password `mfsroot`:
 ```sh
-wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.0-RELEASE-amd64.img
-dd if=mfsbsd-14.0-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
+wget https://mfsbsd.vx.sk/files/images/14/amd64/mfsbsd-14.1-RELEASE-amd64.img
+dd if=mfsbsd-14.1-RELEASE-amd64.img of=/dev/nvme0n1 bs=1MB
 reboot
 ```
 ## Base Installation
@@ -51,7 +51,7 @@ zfs set atime=off zroot
 ```
 
 #### Optionally upgrade system
-If mfsBSD is not providing recent FreeBSD versions, you can upgrade the system. 
+If mfsBSD is not providing recent FreeBSD versions, you can upgrade the system.
 It make sense to do this as early as possible to minimize migration effort.
 ```sh
 freebsd-update -r 14.0-RELEASE upgrade
@@ -77,7 +77,7 @@ freebsd-version
 
 ## First Start of installed system
 Mind to use your newly created user to login via SSH.
-It might be useful to adjust the settings of SSH-daemon, however the default process will do this, too, at a later point. 
+It might be useful to adjust the settings of SSH-daemon, however the default process will do this, too, at a later point.
 
 ### Create encrypted ZFS base directory /werzel
 The ecnrypted directory will be used to store all sensitive data, which is not necessary to start the server (so you can unlock the encrypted directy using SSH)
@@ -86,7 +86,7 @@ zfs create -o mountpoint=/werzel -o encryption=aes-256-gcm -o keylocation=prompt
 ```
 **Please note:** the encrypted ZFS will be created using password from prompt, without any furter notice. Please, provide a secure passphrase to ZFS process and store it savely.
 
-#### Create machine's SSH Key 
+#### Create machine's SSH Key
 To allow access to GitHub (or other repos), create a key of the machine
 Always use password!
 ```sh
@@ -100,7 +100,7 @@ This setup uses git, github (gh) and mobile shell (mosh) for first setup tasks.
 mkdir -p /usr/local/etc/pkg/repos
 echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > /usr/local/etc/pkg/repos/FreeBSD.conf
 pkg update -f && pkg upgrade
-pkg install -y git gh mosh ca_root_nss vim 
+pkg install -y git gh mosh ca_root_nss vim
 ```
 
 Log into github (or any other repository platform) to load the base scripts (which includes this howto, too).
@@ -150,7 +150,7 @@ service sshd restart
 Try to mitigate any issues otherwise, all connection get lost and the system is stuck.
 So stop running PF-firewall after 5 minutes using crontab.
 ```sh
-crontab -e 
+crontab -e
 */5 * * * *   service pf stop
 ```
 Now check also the Firewall
@@ -158,7 +158,7 @@ Now check also the Firewall
 kldload pf
 service pf onereload
 ```
-Then try to start the firewall. 
+Then try to start the firewall.
 ```sh
 service pf onestart
 ```
@@ -205,11 +205,11 @@ zfs load-key -r zroot/werzel
 zfs mount zroot/werzel
 ```
 ### Rescue
-```sh  
+```sh
 zfs load-key -r zroot/werzel
 zpool import -fR /mnt
 ```
-## GIT 
+## GIT
 ### Empty Repository
 ```sh
 git init --bare
@@ -258,7 +258,7 @@ Rescue-System 13
 bsdinstallimage
 ```
 
-sshd, ntpd instalieren  
+sshd, ntpd instalieren
 Benutzer thorsten anlegen und root mit neuem Passwort versehen
 
 ```sh
@@ -293,7 +293,7 @@ pwd_mkdb -p /etc/master.passwd
 ```
 
 ## Vorinstallation Löschen
-```sh  
+```sh
 kldload zfs
 kldload aesni
 gmirror load
@@ -312,7 +312,7 @@ Run "etcupdate extract" once when your sources match your running system, then r
 "etcupdate" after every upgrade and "etcupdate resolve" to resolve any conflicts.
 
 ### Partitionierung der ZFS-Platte
-```sh  
+```sh
 kldload zfs
 kldload aesni
 sysctl kern.geom.label.gptid.enable=0
@@ -482,4 +482,3 @@ zfs create -o compression=gzip -o exec=off -o setuid=off zroot/var/mail
 zfs create                     -o exec=off -o setuid=off zroot/var/run
 zfs create -o compression=lz4  -o exec=on  -o setuid=off zroot/var/tmp
 ```
-
