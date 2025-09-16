@@ -10,10 +10,10 @@ chsh -s /usr/local/bin/zsh thorsten
 ## Software Packages from Ports using GIT (since 14+)
 git clone https://git.freebsd.org/ports.git /usr/ports
 
-## FreeBSD SRC which is neede for Jails!
+## FreeBSD SRC which is needed for Jails!
 # Clone current used version of FreeBSD
 mv /usr/src /usr/src.bak
-git clone --branch releng/14.0 https://git.FreeBSD.org/src.git /usr/src
+git clone --branch releng/14.3 https://git.FreeBSD.org/src.git /usr/src
 
 ## Clone GIT
 #mkdir -p /werzel/server_config
