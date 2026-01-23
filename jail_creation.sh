@@ -28,7 +28,7 @@ bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
 bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
 bastille bootstrap https://github.com/SamGamdschie/bastille-unbound
 bastille bootstrap https://github.com/SamGamdschie/bastille-dnssec
-bastille bootstrap https://github.com/SamGamdschie/bastille-crwdsec
+bastille bootstrap https://github.com/SamGamdschie/bastille-crowdsec
 # MAIL
 bastille bootstrap https://github.com/SamGamdschie/bastille-clamav
 bastille bootstrap https://github.com/SamGamdschie/bastille-solr
