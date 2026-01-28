@@ -33,6 +33,8 @@ bastille template paperless SamGamdschie/paperless_ngx --arg py-version=311
 # Start Base
 bastille start db
 bastille start resolver
+bastille start crowdsec
+#bastille start dnssec
 
 # Reset Nameserver to own resolver!
 bastille cp ALL /werzel/server_config/resolv.conf etc/resolv.conf
