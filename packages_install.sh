@@ -22,3 +22,5 @@ cd /werzel && gh repo clone SamGamdschie/server_config
 cd /root && gh repo clone SamGamdschie/werzel_tools
 #mkdir -p /werzel/mejep
 cd /werzel && gh repo clone SamGamdschie/mejep
+## Crowdsec Blocklist Importer
+cd /werzel && git clone https://github.com/wolffcatskyy/crowdsec-blocklist-import.git
