@@ -87,5 +87,5 @@ bastille start ALL
 ```
 If all runs smoothly, destroy the old release
 ```sh
-bastille destroy 14.1-RELEASE
+bastille destroy 14.3-RELEASE
 ```
