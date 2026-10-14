@@ -23,7 +23,7 @@ mkdir -p /werzel/certificates/archive
 # Create jails from templates
 ## first bootstrap everything
 # BASE
-bastille bootstrap 14.3-RELEASE update
+bastille bootstrap 14.4-RELEASE update
 bastille bootstrap https://github.com/SamGamdschie/bastille-mariadb
 bastille bootstrap https://github.com/SamGamdschie/bastille-letsencrypt
 bastille bootstrap https://github.com/SamGamdschie/bastille-unbound
@@ -44,29 +44,30 @@ bastille bootstrap https://github.com/SamGamdschie/bastille-wordpress
 bastille bootstrap https://github.com/SamGamdschie/bastille-paperless_ngx
 
 ## now create all jails
-bastille create db 14.3-RELEASE 10.0.0.1
-bastille create certbot 14.3-RELEASE 10.0.0.2
-bastille create resolver 14.3-RELEASE 10.0.0.5
-bastille create dnssec 14.3-RELEASE 10.0.0.6
-bastille create crowdsec 14.3-RELEASE 10.0.0.9
+bastille create db 14.4-RELEASE 10.0.0.1
+bastille create certbot 14.4-RELEASE 10.0.0.2
+bastille create resolver 14.4-RELEASE 10.0.0.5
+bastille create dnssec 14.4-RELEASE 10.0.0.6
+bastille create crowdsec 14.4-RELEASE 10.0.0.9
 
-bastille create mail 14.3-RELEASE 10.0.0.10
-bastille create redis 14.3-RELEASE 10.0.0.11
-bastille create clamav 14.3-RELEASE 10.0.0.13
+bastille create mail 14.4-RELEASE 10.0.0.10
+bastille create redis 14.4-RELEASE 10.0.0.11
+bastille create clamav 14.4-RELEASE 10.0.0.13
 
-bastille create proxy 14.3-RELEASE 10.0.0.20
-bastille create postfixadmin 14.3-RELEASE 10.0.0.21
-bastille create phpmyadmin 14.3-RELEASE 10.0.0.22
-bastille create matomo 14.3-RELEASE 10.0.0.23
+bastille create proxy 14.4-RELEASE 10.0.0.20
+bastille create postfixadmin 14.4-RELEASE 10.0.0.21
+bastille create phpmyadmin 14.4-RELEASE 10.0.0.22
+bastille create matomo 14.4-RELEASE 10.0.0.23
 
-bastille create cloud 14.3-RELEASE 10.0.0.30
-bastille create heimen 13.-RELEASE 10.0.0.31
-bastille create hobbingen 14.3-RELEASE 10.0.0.32
-bastille create seeadler 14.3-RELEASE 10.0.0.33
-bastille create mejep 14.3-RELEASE 10.0.0.34
-bastille create werzel 14.3-RELEASE 10.0.0.35
-bastille create thorsten 14.3-RELEASE 10.0.0.36
-bastille create paperless 14.3-RELEASE 10.0.0.38
+bastille create cloud 14.4-RELEASE 10.0.0.30
+bastille create heimen 14.4-RELEASE 10.0.0.31
+bastille create hobbingen 14.4-RELEASE 10.0.0.32
+bastille create seeadler 14.4-RELEASE 10.0.0.33
+bastille create mejep 14.4-RELEASE 10.0.0.34
+bastille create werzel 14.4-RELEASE 10.0.0.35
+bastille create thorsten 14.4-RELEASE 10.0.0.36
+bastille create paperless 14.4-RELEASE 10.0.0.38
+bastille create schulverein 14.4-RELEASE 10.0.0.39
 
 ## Add new jails to all host files
 bastille cp ALL /werzel/server_config/hosts.bastille etc/hosts

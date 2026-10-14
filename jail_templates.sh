@@ -29,6 +29,7 @@ bastille template mejep SamGamdschie/bastille-php --arg config=mejep
 bastille template werzel SamGamdschie/bastille-php --arg config=werzel
 bastille template thorsten SamGamdschie/bastille-php --arg config=thorsten
 bastille template paperless SamGamdschie/paperless_ngx --arg py-version=311
+bastille template schulverein SamGamdschie/bastille-wordpress --arg config=schulverein
 
 # Start Base
 bastille start db
@@ -57,3 +58,4 @@ bastille start mejep
 bastille start werzel
 bastille start thorsten
 bastille start paperless
+bastille start schulverein
